@@ -273,7 +273,7 @@ def calc_likelyhood(gene1, gene2):
     for j in professions:
         dict_result[professions[j]] = new_genes[2,j]
 
-    return  new_genes
+    return  dict_result
 
 
 print(calc_likelyhood(get_gene_prob(get_contract(12, rpc_add)),get_gene_prob(get_contract(13, rpc_add))))
