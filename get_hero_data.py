@@ -1,4 +1,6 @@
+from os import P_DETACH
 from web3 import Web3  
+import numpy as np
 ABI = ABI = """
             [
                 {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"approved","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Approval","type":"event"},
@@ -103,6 +105,86 @@ _ability_gene = {
     28: "Transcendant1"
 }
 
+upgrade_gene = {
+    0: 16,
+    1: 16,
+    2: 17,
+    3: 17,
+    4: 18,
+    5: 18,
+    6: 19,
+    7: 19,
+    16: 24,
+    17: 24,
+    18: 25,
+    19: 25,
+    24: 28,
+    25: 28,
+    28: 28
+}
+
+def upgrade_chances(i):
+    if i in range(0,20): 
+        return 0.25
+    if i in range(24,26): 
+        return 0.125
+    if i == 28: 
+        return 1
+    return 0 
+
+complement_gene = {
+    0: 1,
+    1: 0,
+    2: 3,
+    3: 2,
+    4: 5,
+    5: 4,
+    6: 7,
+    7: 6,
+    16: 17,
+    17: 16,
+    18: 19,
+    19: 18,
+    24: 25,
+    25: 24,
+    28: 28
+}
+professions = {
+    0: 'mining',
+    2: 'gardening',
+    4: 'fishing',
+    6: 'foraging',
+}
+
+stats = {
+    0: 'strength',
+    2: 'agility',
+    4: 'intelligence',
+    6: 'wisdom',
+    8: 'luck',
+    10: 'vitality',
+    12: 'endurance',
+    14: 'dexterity'
+}
+
+scope_of_genes = [0,1,2,3,4,5,6] 
+'eventually this can be expanded to cover all genes'
+
+muteable_genes = [0,1,3,4,5,6]
+stat_traits = {
+    0: 'class',
+    1: 'subClass',
+    2: 'profession',
+    3: 'passive1',
+    4: 'passive2',
+    5: 'active1',
+    6: 'active2',
+    7: 'statBoost1',
+    8: 'statBoost2',
+    9: 'statsUnknown1',
+    10: 'element',
+    11: 'statsUnknown2'
+}
 ALPHABET = '123456789abcdefghijkmnopqrstuvwx'
 def __genesToKai(genes):
     BASE = len(ALPHABET)
@@ -154,21 +236,49 @@ def get_ability_gene(group):
     return [_ability_gene.get(group[5]), _ability_gene.get(group[6]),_ability_gene.get(group[3]),_ability_gene.get(group[4])]
 contract = get_contract(124693,rpc_add) 
 genes = contract[2][0]
-print(get_contract(125261, rpc_add)[1][2:4])
-professions = {
-    0: 'mining',
-    2: 'gardening',
-    4: 'fishing',
-    6: 'foraging',
-}
 
-stats = {
-    0: 'strength',
-    2: 'agility',
-    4: 'intelligence',
-    6: 'wisdom',
-    8: 'luck',
-    10: 'vitality',
-    12: 'endurance',
-    14: 'dexterity'
-}
+'gene_prob array of probabilities to be dominate before mutation for all possible traits:'
+
+def get_gene_prob(hero_contract):
+    p_genes = np.zeros([11,32])
+    swap_p = [0.75, 0.1875, 0.046875, 0.015625]
+    raw_genes = hero_contract[2][0]
+    genes = genes2traits(raw_genes)
+    'print(genes)'
+    for i in range(11):
+        for j in range(4):
+            p_genes[i][genes[j][i]] += swap_p[j]
+    return p_genes            
+
+
+def calc_likelyhood(gene1, gene2):
+    new_genes = np.zeros([11,32])
+    dict_result = {}
+    for i in scope_of_genes:
+        for j in range(32):
+            if (i in muteable_genes) and (j in complement_gene):
+                upgrade_p = (gene1[i][j] * gene2[i][complement_gene[j]])  * upgrade_chances(j)
+                new_genes[i][upgrade_gene[j]] += upgrade_p
+                new_genes[i][j] -= upgrade_p *0.5
+                new_genes[i][complement_gene[j]] -= upgrade_p * 0.5
+            new_genes[i][j] += gene1[i][j] * 0.5 +  gene2[i][j] * 0.5 
+        
+    for j in complement_gene:
+        dict_result["prim " + _class[j]] = new_genes[0,j]
+        dict_result["sub " + _class[j]] = new_genes[1,j]
+        #dict_result["passive 1 " + _ability_gene[j]] = new_genes[3,j]
+        #dict_result["passive 2 " + _ability_gene[j]] = new_genes[4,j]
+        #dict_result["active 1 " + _ability_gene[j]] = new_genes[5,j]
+        #dict_result["active 2 " + _ability_gene[j]] = new_genes[6,j]
+    for j in professions:
+        dict_result[professions[j]] = new_genes[2,j]
+
+    return  new_genes
+
+
+print(calc_likelyhood(get_gene_prob(get_contract(12, rpc_add)),get_gene_prob(get_contract(13, rpc_add))))
+
+
+
+'print(get_contract(125261, rpc_add)[1][2:4])'
+
