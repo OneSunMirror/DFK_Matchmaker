@@ -1,7 +1,6 @@
 from aiohttp import request
 from flask import Flask, render_template, request, url_for, flash, redirect
 from get_hero_data import *
-k
 app = Flask(__name__)
 if __name__ == "__main__":
         app.run()
