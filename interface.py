@@ -17,4 +17,3 @@ def find_genes():
     summon_result = calc_likelyhood(gene_prob_1, gene_prob_2)   
     print(summon_result) 
     return render_template('index.html', hero_ID_1=hero_ID_1, hero_ID_2=hero_ID_2, summon_result=summon_result, gene_details_1=gene_details_1, gene_details_2=gene_details_2)
-g
