@@ -171,6 +171,14 @@ scope_of_genes = [0,1,2,3,4,5,6]
 'eventually this can be expanded to cover all genes'
 
 muteable_genes = [0,1,3,4,5,6]
+
+_gene_types = {
+    0: 'D',
+    1: 'R1',
+    2: 'R2',
+    3: 'R3'
+}
+
 stat_traits = {
     0: 'class',
     1: 'subClass',
@@ -184,6 +192,18 @@ stat_traits = {
     9: 'statsUnknown1',
     10: 'element',
     11: 'statsUnknown2'
+}
+
+gene_encoding = {
+    0: _class,
+    1: _class,
+    2: professions,
+    3: _ability_gene,
+    4: _ability_gene,
+    5: _ability_gene,
+    6: _ability_gene,
+    7: stats,
+    8: stats,
 }
 ALPHABET = '123456789abcdefghijkmnopqrstuvwx'
 def __genesToKai(genes):
@@ -234,22 +254,30 @@ def get_contract(hero_id, rpc_address):
 
 def get_ability_gene(group):
     return [_ability_gene.get(group[5]), _ability_gene.get(group[6]),_ability_gene.get(group[3]),_ability_gene.get(group[4])]
+
 contract = get_contract(124693,rpc_add) 
 genes = contract[2][0]
 
-'gene_prob array of probabilities to be dominate before mutation for all possible traits:'
+'gene_prob array of probabilities to be dominate before mutation for all possible traits:'  
 
 def get_gene_prob(hero_contract):
     p_genes = np.zeros([11,32])
     swap_p = [0.75, 0.1875, 0.046875, 0.015625]
     raw_genes = hero_contract[2][0]
     genes = genes2traits(raw_genes)
-    'print(genes)'
+    dict_gene_all = {}
+    dict_gene = {}
     for i in range(11):
         for j in range(4):
+            if i in scope_of_genes:
+                dict_gene[_gene_types[j]] = gene_encoding[i][genes[j][i]]
             p_genes[i][genes[j][i]] += swap_p[j]
-    return p_genes            
+        if i in scope_of_genes:
+            dict_gene_all[stat_traits[i]] = dict_gene
+            dict_gene = {}
+    return p_genes, dict_gene_all            
 
+print(get_gene_prob(contract))
 
 def calc_likelyhood(gene1, gene2):
     new_genes = np.zeros([11,32])
@@ -266,17 +294,16 @@ def calc_likelyhood(gene1, gene2):
     for j in complement_gene:
         dict_result["prim " + _class[j]] = new_genes[0,j]
         dict_result["sub " + _class[j]] = new_genes[1,j]
-        #dict_result["passive 1 " + _ability_gene[j]] = new_genes[3,j]
-        #dict_result["passive 2 " + _ability_gene[j]] = new_genes[4,j]
-        #dict_result["active 1 " + _ability_gene[j]] = new_genes[5,j]
-        #dict_result["active 2 " + _ability_gene[j]] = new_genes[6,j]
+        dict_result["passive 1 " + _ability_gene[j]] = new_genes[3,j]
+        dict_result["passive 2 " + _ability_gene[j]] = new_genes[4,j]
+        dict_result["active 1 " + _ability_gene[j]] = new_genes[5,j]
+        dict_result["active 2 " + _ability_gene[j]] = new_genes[6,j]
     for j in professions:
         dict_result[professions[j]] = new_genes[2,j]
-
     return  dict_result
 
 
-print(calc_likelyhood(get_gene_prob(get_contract(12, rpc_add)),get_gene_prob(get_contract(13, rpc_add))))
+#print(calc_likelyhood(get_gene_prob(get_contract(12, rpc_add)),get_gene_prob(get_contract(13, rpc_add))))
 
 
 

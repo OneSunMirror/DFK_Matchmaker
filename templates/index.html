@@ -12,5 +12,19 @@
 
 <p>Returns potential heroes</p>
 
+<h2>Hero Data for: {{ hero_ID }}</h2>
+<table>
+
+    
+    {% for key, values in gene_details %}
+      <tr>
+        <th>{{ key }}</th>
+        <td>
+        {{ values }}
+        </td>
+      </tr>
+    {% endfor %}
+</table>
+
 </body>
 </html>
