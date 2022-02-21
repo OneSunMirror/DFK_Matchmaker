@@ -1,3 +1,4 @@
+from ast import Sub
 from os import P_DETACH
 from web3 import Web3  
 import numpy as np
@@ -290,16 +291,30 @@ def calc_likelyhood(gene1, gene2):
                 new_genes[i][j] -= upgrade_p *0.5
                 new_genes[i][complement_gene[j]] -= upgrade_p * 0.5
             new_genes[i][j] += gene1[i][j] * 0.5 +  gene2[i][j] * 0.5 
-        
+    prim = {}
+    sub = {}
+    pass1 ={} 
+    pass2 ={}
+    act1 ={}
+    act2 ={}
+    prof = {}   
     for j in complement_gene:
-        dict_result["prim " + _class[j]] = new_genes[0,j]
-        dict_result["sub " + _class[j]] = new_genes[1,j]
-        dict_result["passive 1 " + _ability_gene[j]] = new_genes[3,j]
-        dict_result["passive 2 " + _ability_gene[j]] = new_genes[4,j]
-        dict_result["active 1 " + _ability_gene[j]] = new_genes[5,j]
-        dict_result["active 2 " + _ability_gene[j]] = new_genes[6,j]
+        prim[_class[j]] = round(new_genes[0,j]*100,2) 
+        sub[_class[j]] = round(new_genes[1,j]*100,2) 
+        pass1[_ability_gene[j]] = round(new_genes[3,j]*100,2)
+        pass2[_ability_gene[j]] = round(new_genes[4,j]*100,2)
+        act1[_ability_gene[j]] = round(new_genes[5,j]*100,2) 
+        act2[_ability_gene[j]] = round(new_genes[6,j]*100,2)
     for j in professions:
-        dict_result[professions[j]] = new_genes[2,j]
+        prof[professions[j]] = round(new_genes[2,j]*100,2)
+    dict_result['Primary Class'] = {x:y for x,y in sorted(prim.items(), key=lambda item: item[1], reverse=True) if y!=0.0}
+    dict_result['Sub class'] = {x:y for x,y in sorted(sub.items(), key=lambda item: item[1], reverse=True) if y!=0.0}
+    dict_result['Passive 1'] = {x:y for x,y in sorted(pass1.items(), key=lambda item: item[1], reverse=True) if y!=0.0}
+    dict_result['Passive 2'] = {x:y for x,y in sorted(pass2.items(), key=lambda item: item[1], reverse=True) if y!=0.0}
+    dict_result['Active 1'] = {x:y for x,y in sorted(act1.items(), key=lambda item: item[1], reverse=True) if y!=0.0}
+    dict_result['Active 2'] = {x:y for x,y in sorted(act2.items(), key=lambda item: item[1], reverse=True) if y!=0.0}
+    dict_result['Profession'] = {x:y for x,y in sorted(prof.items(), key=lambda item: item[1], reverse=True) if y!=0.0}
+    print(dict_result)
     return  dict_result
 
 

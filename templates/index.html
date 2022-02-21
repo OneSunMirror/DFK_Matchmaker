@@ -1,30 +1,133 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    .row {
+      margin-left:-5px;
+      margin-right:-5px;
+    }
+      
+    .column_2 {
+      float: left;
+      width: 13.5%;
+      padding: 5px;
+    }
+    .column_1 {
+      float: left;
+      width: 35%;
+      padding: 5px;
+    }
+    
+    /* Clearfix (clear floats) */
+    .row::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+    
+    table {
+      border-collapse: collapse;
+      border-spacing: 0;
+      width: 100%;
+      border: 1px solid #ddd;
+    }
+    
+    th, td {
+      text-align: left;
+      padding: 2px;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    </style>
+</head>
 <body>
 
 <h2>Defi Kingdoms Matchmaker</h2>
 
 <form action="ID" method="post">
-  <label for="hero_ID">Hero ID:</label><br>
-  <input type="text" id="hero_ID" name="hero_ID" value=""><br>
+  <label for="hero_ID_1">Hero ID #1:</label><br>
+  <input type="text" id="hero_ID_1" name="hero_ID_1" value=""><br>
+  <label for="hero_ID_2">Hero ID #2:</label><br>
+  <input type="text" id="hero_ID_2" name="hero_ID_2" value=""><br>
   <input type="submit" value="See Genetic Makeup">
 </form> 
 
 <p>Returns potential heroes</p>
-
-<h2>Hero Data for: {{ hero_ID }}</h2>
+<div class="row">
+  <div class="column_1">
+    <h2>Gene - Hero {{ hero_ID_1 }}</h2>
 <table>
+  <tr>
+    <th>Gene</th>
+    <th>D</th>
+    <th>R1</th>
+    <th>R2</th>
+    <th>R3</th>
+  </tr>
+  {% for key in gene_details_1 %}
+  <tr>
+    <th>{{ key }}</th>
+    {% for value in gene_details_1[key]%}
+    <td>
+    {{ gene_details_1[key][value] }}
+    </td>
+    {% endfor %}    
+  </tr>
+{% endfor %}   
+</table>
+</div>
+<div class="column_1">
+<h2>Gene - Hero {{ hero_ID_2 }}</h2>
+<table>
+  <tr>
+    <th>Gene</th>
+    <th>D</th>
+    <th>R1</th>
+    <th>R2</th>
+    <th>R3</th>
+  </tr>
+  {% for key in gene_details_2 %}
+  <tr>
+    <th>{{ key }}</th>
+    {% for value in gene_details_2[key]%}
+    <td>
+    {{ gene_details_2[key][value] }}
+    </td>
+    {% endfor %}    
+  </tr>
+{% endfor %} 
+</table>
+</div>
+</div>
 
-    
-    {% for key, values in gene_details %}
+<h2> Potential Summon </h2>
+<div class="row">
+  {% for key in summon_result %}
+
+  <div class="column_2">
+    <table>
       <tr>
-        <th>{{ key }}</th>
+        <th>{{key}}</th>
+        <th>Likelihood %</th>
+      </tr>
+      {% for sub_key in summon_result[key] %}
+      <tr>
+        <th>{{sub_key}}</th>
         <td>
-        {{ values }}
+          {{summon_result[key][sub_key]}}
         </td>
       </tr>
-    {% endfor %}
-</table>
+      {% endfor %}
+    </table>
+  </div>
+  {% endfor %}  
+</div>
 
 </body>
 </html>
