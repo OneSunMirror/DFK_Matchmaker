@@ -155,6 +155,14 @@ professions = {
     6: 'foraging',
 }
 
+hero_rarity = {
+    0: "common",
+    1: "uncommon",
+    2: "rare",
+    3: "legendary",
+    4: "mythic",
+}
+
 stats = {
     0: 'strength',
     2: 'agility',
@@ -179,15 +187,15 @@ _gene_types = {
 }
 
 stat_traits = {
-    0: 'class',
-    1: 'subClass',
-    2: 'profession',
-    3: 'passive1',
-    4: 'passive2',
-    5: 'active1',
+    0: 'Class',
+    1: 'SubClass',
+    2: 'Profession',
+    3: 'Passive1',
+    4: 'Passive2',
+    5: 'Active1',
     6: 'active2',
-    7: 'statBoost1',
-    8: 'statBoost2',
+    7: 'StatBoost1',
+    8: 'StatBoost2',
     9: 'statsUnknown1',
     10: 'element',
     11: 'statsUnknown2'
@@ -244,12 +252,15 @@ def __kai2dec(kai):
     return ALPHABET.index(kai)
 
 def get_contract(hero_id, rpc_address):
-    w3 = Web3(Web3.HTTPProvider(rpc_address))   
-    contract_address = Web3.toChecksumAddress(HERO_CONTRACT)
-    contract = w3.eth.contract(contract_address, abi=ABI)
-    hero_contract = contract.functions.getHero(hero_id).call()          
-    
-    return hero_contract 
+    try:
+        w3 = Web3(Web3.HTTPProvider(rpc_address))   
+        contract_address = Web3.toChecksumAddress(HERO_CONTRACT)
+        contract = w3.eth.contract(contract_address, abi=ABI)
+        hero_contract = contract.functions.getHero(hero_id).call()          
+        return hero_contract
+    except Exception as inst:
+        return None
+     
 
 def get_ability_gene(group):
     return [_ability_gene.get(group[5]), _ability_gene.get(group[6]),_ability_gene.get(group[3]),_ability_gene.get(group[4])]
@@ -260,9 +271,24 @@ genes = contract[2][0]
 'gene_prob array of probabilities to be dominate before mutation for all possible traits:'  
 
 def get_gene_prob(hero_contract):
+    raw_genes = hero_contract[2][0]
+    return calc_prob(raw_genes)
+
+def get_other_hero_data(hero_contract):
+    #print(hero_contract)
+    hero_details ={}
+    hero_details['summonerId'] = hero_contract[1][2]
+    hero_details['assistantId'] = hero_contract[1][3]
+    hero_details['summons'] = hero_contract[1][4]
+    hero_details['maxsummons'] = hero_contract[1][5]
+    hero_details['generation'] = hero_contract[2][4]
+    hero_details['rarity'] = hero_contract[2][2]
+    return hero_details
+
+
+def calc_prob(raw_genes):
     p_genes = np.zeros([11,32])
     swap_p = [0.75, 0.1875, 0.046875, 0.015625]
-    raw_genes = hero_contract[2][0]
     genes = genes2traits(raw_genes)
     dict_gene_all = {}
     dict_gene = {}
@@ -276,7 +302,11 @@ def get_gene_prob(hero_contract):
             dict_gene = {}
     return p_genes, dict_gene_all            
 
-print(get_gene_prob(contract))
+
+
+
+
+#print(get_gene_prob(contract))
 
 def calc_likelyhood(gene1, gene2):
     new_genes = np.zeros([11,32])
@@ -312,7 +342,7 @@ def calc_likelyhood(gene1, gene2):
     dict_result['Active 1'] = {x:y for x,y in sorted(act1.items(), key=lambda item: item[1], reverse=True) if y!=0.0}
     dict_result['Active 2'] = {x:y for x,y in sorted(act2.items(), key=lambda item: item[1], reverse=True) if y!=0.0}
     dict_result['Profession'] = {x:y for x,y in sorted(prof.items(), key=lambda item: item[1], reverse=True) if y!=0.0}
-    print(dict_result)
+    #Sprint(dict_result)
     return  dict_result
 
 

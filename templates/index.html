@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css">
   <style>
     * {
       box-sizing: border-box;
@@ -57,7 +59,7 @@
   <input type="text" id="hero_ID_2" name="hero_ID_2" value=""><br>
   <input type="submit" value="See Genetic Makeup">
 </form> 
-
+<input id="matches" value="Find Matches" type="button" />
 <p>Returns potential heroes</p>
 <div class="row">
   <div class="column_1">
@@ -128,6 +130,58 @@
   </div>
   {% endfor %}  
 </div>
+
+<h2> Potential Matches in Auction House </h2>
+<table id="data" class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Class Score</th>
+      <th>Class </th>
+      <th>Sub Class</th>
+      <th>Rarity</th>
+      <th>Generation</th>
+      <th>Price</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
+<script>
+  $("#matches").on('click', function() {
+    var matches
+    $.ajax({
+         'type': 'POST',
+         'async': false,
+         'url': '/api/update',
+         'dataType' : 'json',
+         'data': $('#hero_ID_1').serialize(), 
+         'success': function(res) {    
+          matches = res
+         }, 
+         'error': function(error) {    
+          
+         }
+    })
+    alert(JSON.stringify(matches))
+    $('#data').DataTable({ 
+      data : matches.data,
+      columns: [
+        {data: "ID"},
+        {data: "Class Score"},
+        {data: "Class"},
+        {data: "Sub Class"},
+        {data: "Rarity"},
+        {data: "Generation"},
+        {data: 'Price'}
+      ]
+    });
+  });
+ 
+</script>
 
 </body>
 </html>
