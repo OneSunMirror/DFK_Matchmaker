@@ -204,12 +204,14 @@ def pull_pg_auction(hero_gene, search_space, hero_details):
   generation = hero_details['generation']
   maxsummons = hero_details['maxsummons']
   summonsleft = maxsummons - hero_details['summons']
-  DATABASE_URL = os.environ.get('DATABASE_URL')
-  conn = psycopg2.connect(
-        host="localhost",
-        database="Heroes_all",
-        user="postgres",
-        password="asdqwe123")
+  DATABASE_URL = os.environ['DATABASE_URL']
+  print(DATABASE_URL)
+  conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+  #conn = psycopg2.connect(
+  #      host="localhost",
+  #      database="Heroes_all",
+  #      user="postgres",
+  #      password="asdqwe123")
   cur = conn.cursor()
   search_space_txt = ''
   for i in search_space:
