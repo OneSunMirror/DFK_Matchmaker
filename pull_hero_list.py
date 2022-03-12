@@ -170,7 +170,7 @@ def auctions(auction_address, index, rpc_address):
 
 #print(auctions(SALE_AUCTIONS_CONTRACT_ADDRESS, 1, rpc_add))
 
-DATABASE_URL = os.environ.get('DATABASE_URL')
+DATABASE_URL = os.environ['DATABASE_URL']
 def update_pg_auction():
   print(DATABASE_URL)
   conn = psycopg2.connect(DATABASE_URL)
