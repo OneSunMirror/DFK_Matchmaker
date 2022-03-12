@@ -4,6 +4,7 @@ from get_hero_data import *
 import requests
 import psycopg2
 import json
+import os
 from web3 import Web3
 ABI = """
     [
@@ -169,13 +170,15 @@ def auctions(auction_address, index, rpc_address):
 
 #print(auctions(SALE_AUCTIONS_CONTRACT_ADDRESS, 1, rpc_add))
 
-
+DATABASE_URL = os.environ.get('DATABASE_URL')
 def update_pg_auction():
-  conn = psycopg2.connect(
-        host="localhost",
-        database="Heroes_all",
-        user="postgres",
-        password="asdqwe123")
+  print(DATABASE_URL)
+  conn = psycopg2.connect(DATABASE_URL)
+  #conn = psycopg2.connect(
+  #      host="localhost",
+  ##      database="Heroes_all",
+   #     user="postgres",
+   #     password="asdqwe123")
   cur = conn.cursor()
   SQL = cur.mogrify('DELETE From heroes')
   cur.execute(SQL)
@@ -200,6 +203,7 @@ def pull_pg_auction(hero_gene, search_space, hero_details):
   generation = hero_details['generation']
   maxsummons = hero_details['maxsummons']
   summonsleft = maxsummons - hero_details['summons']
+  DATABASE_URL = os.environ.get('DATABASE_URL')
   conn = psycopg2.connect(
         host="localhost",
         database="Heroes_all",
