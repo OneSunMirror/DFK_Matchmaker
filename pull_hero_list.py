@@ -1,5 +1,6 @@
 from http.client import CONFLICT
 from re import M
+from turtle import end_fill
 from get_hero_data import *
 import requests
 import psycopg2
@@ -241,12 +242,22 @@ def pull_pg_auction(hero_gene, search_space, hero_details):
     #match_data = get_other_hero_data(get_contract(match[0], rpc_add))
     attributes= ['ID', 'Class', 'Sub Class', 'Rarity', 'Generation', 'Max Summons', 'Summons Left', 'level', 'Price']
     dict_attri = {attributes[i]: match[i] for i in range(0, 9)}
+    comb_score = 0
+    tot_score = 0
+    j = 0
     for i in search_space:
-      dict_attri[stat_traits[i] + ' Score'] = match[i+9] 
+      if i == 0:
+        tot_score += match[j+9]
+        dict_attri[stat_traits[i] + ' Score'] = match[i+9]
+      elif (i >= 3) and (i <= 6):
+        comb_score += match[j+9]
+      dict_attri['Attrib Score'] = comb_score
+      dict_attri['Total Score'] = tot_score + comb_score / 4 
+      j += 1
     matches.append(dict_attri)
-    print(matches)
-  found_data["data"] = matches
-  return json.dumps(found_data)
+  #print(matches)
+  #found_data["data"] = matches
+  return matches
 
 
 #  SQL = cur.mogrify('SELECT * FROM Heroes Where gene[1][1] >= 0.75')
@@ -257,6 +268,6 @@ def pull_pg_auction(hero_gene, search_space, hero_details):
 #  conn.close()
 #  return data
 #contract = get_contract(125323, rpc_add)
-hero_gene, __ = get_gene_prob(contract)
-hero_1_details = get_other_hero_data(contract)
-pull_pg_auction(hero_gene, [0], hero_1_details)
+#hero_gene, __ = get_gene_prob(contract)
+#hero_1_details = get_other_hero_data(contract)
+#pull_pg_auction(hero_gene, [0], hero_1_details)

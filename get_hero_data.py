@@ -193,7 +193,7 @@ stat_traits = {
     3: 'Passive1',
     4: 'Passive2',
     5: 'Active1',
-    6: 'active2',
+    6: 'Active2',
     7: 'StatBoost1',
     8: 'StatBoost2',
     9: 'statsUnknown1',
@@ -265,8 +265,8 @@ def get_contract(hero_id, rpc_address):
 def get_ability_gene(group):
     return [_ability_gene.get(group[5]), _ability_gene.get(group[6]),_ability_gene.get(group[3]),_ability_gene.get(group[4])]
 
-contract = get_contract(124693,rpc_add) 
-genes = contract[2][0]
+#contract = get_contract(124693,rpc_add) 
+#genes = contract[2][0]
 
 'gene_prob array of probabilities to be dominate before mutation for all possible traits:'  
 
@@ -290,15 +290,16 @@ def calc_prob(raw_genes):
     p_genes = np.zeros([11,32])
     swap_p = [0.75, 0.1875, 0.046875, 0.015625]
     genes = genes2traits(raw_genes)
-    dict_gene_all = {}
+    dict_gene_all = []
     dict_gene = {}
     for i in range(11):
         for j in range(4):
+            dict_gene['type'] = stat_traits[i]
             if i in scope_of_genes:
                 dict_gene[_gene_types[j]] = gene_encoding[i][genes[j][i]]
             p_genes[i][genes[j][i]] += swap_p[j]
         if i in scope_of_genes:
-            dict_gene_all[stat_traits[i]] = dict_gene
+            dict_gene_all.append(dict_gene)
             dict_gene = {}
     return p_genes, dict_gene_all            
 
@@ -310,7 +311,7 @@ def calc_prob(raw_genes):
 
 def calc_likelyhood(gene1, gene2):
     new_genes = np.zeros([11,32])
-    dict_result = {}
+    dict_result = []
     for i in scope_of_genes:
         for j in range(32):
             if (i in muteable_genes) and (j in complement_gene):
@@ -335,13 +336,13 @@ def calc_likelyhood(gene1, gene2):
         act2[_ability_gene[j]] = round(new_genes[6,j]*100,2)
     for j in professions:
         prof[professions[j]] = round(new_genes[2,j]*100,2)
-    dict_result['Primary Class'] = {x:y for x,y in sorted(prim.items(), key=lambda item: item[1], reverse=True) if y!=0.0}
-    dict_result['Sub class'] = {x:y for x,y in sorted(sub.items(), key=lambda item: item[1], reverse=True) if y!=0.0}
-    dict_result['Passive 1'] = {x:y for x,y in sorted(pass1.items(), key=lambda item: item[1], reverse=True) if y!=0.0}
-    dict_result['Passive 2'] = {x:y for x,y in sorted(pass2.items(), key=lambda item: item[1], reverse=True) if y!=0.0}
-    dict_result['Active 1'] = {x:y for x,y in sorted(act1.items(), key=lambda item: item[1], reverse=True) if y!=0.0}
-    dict_result['Active 2'] = {x:y for x,y in sorted(act2.items(), key=lambda item: item[1], reverse=True) if y!=0.0}
-    dict_result['Profession'] = {x:y for x,y in sorted(prof.items(), key=lambda item: item[1], reverse=True) if y!=0.0}
+    dict_result.append([{'name' : x, 'chance' : y} for x,y in sorted(prim.items(), key=lambda item: item[1], reverse=True) if y!=0.0])
+    dict_result.append([{'name' : x, 'chance' : y} for x,y in sorted(sub.items(), key=lambda item: item[1], reverse=True) if y!=0.0])
+    dict_result.append([{'name' : x, 'chance' : y}for x,y in sorted(pass1.items(), key=lambda item: item[1], reverse=True) if y!=0.0])
+    dict_result.append([{'name' : x, 'chance' : y} for x,y in sorted(pass2.items(), key=lambda item: item[1], reverse=True) if y!=0.0])
+    dict_result.append([{'name' : x, 'chance' : y} for x,y in sorted(act1.items(), key=lambda item: item[1], reverse=True) if y!=0.0])
+    dict_result.append([{'name' : x, 'chance' : y} for x,y in sorted(act2.items(), key=lambda item: item[1], reverse=True) if y!=0.0])
+    dict_result.append([{'name' : x, 'chance' : y}for x,y in sorted(prof.items(), key=lambda item: item[1], reverse=True) if y!=0.0])
     #Sprint(dict_result)
     return  dict_result
 
