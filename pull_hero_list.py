@@ -6,6 +6,7 @@ import requests
 import psycopg2
 import json
 import os
+from datetime import datetime
 from web3 import Web3
 ABI = """
     [
@@ -196,8 +197,10 @@ def update_pg_auction():
   #print(data)
   conn.commit()
   conn.close()
+  f = open('log.txt', 'w')
+  f.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
+  f.close()
   return None
-
 #update_pg_auction()
 
 
@@ -235,6 +238,9 @@ def pull_pg_auction(hero_gene, search_space, hero_details):
   #print(data[1])
   conn.commit()
   conn.close()
+  f = open("log.txt","r")
+  last_update = f.read()
+  f.close()
   found_data = {}
   matches = []
   print(len(data))
@@ -257,7 +263,8 @@ def pull_pg_auction(hero_gene, search_space, hero_details):
     matches.append(dict_attri)
   #print(matches)
   #found_data["data"] = matches
-  return matches
+  current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+  return matches, last_update, current_time
 
 
 #  SQL = cur.mogrify('SELECT * FROM Heroes Where gene[1][1] >= 0.75')

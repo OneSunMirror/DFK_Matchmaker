@@ -1,3 +1,4 @@
+from asyncio import current_task
 from webbrowser import get
 from aiohttp import request
 from flask import Flask, render_template, request, url_for, flash, redirect
@@ -40,16 +41,17 @@ def update():
     hero_1_contract = get_contract(int(hero_ID_1), rpc_add)
     gene_prob_1, gene_details_1 = get_gene_prob(hero_1_contract)
     hero_1_details = get_other_hero_data(hero_1_contract)
-    potential_match = pull_pg_auction(gene_prob_1, [0,3,4,5,6], hero_1_details)
+    potential_match, last_update, current_time = pull_pg_auction(gene_prob_1, [0,3,4,5,6], hero_1_details)
     #print(potential_match)
     #print("update")
     res = {}
     res['hero1'] = gene_details_1
     res['matches'] = potential_match
+    res['last_update'] = last_update
+    res['current_time'] = current_time
     #print(json.dumps(gene_1))
     print(res['hero1'])
     return json.dumps(res)
-
 
 @app.route('/api/match', methods=['POST'])
 def data():

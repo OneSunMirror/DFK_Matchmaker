@@ -1,25 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quantico&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}")>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css">
-  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 <h2>Defi Kingdoms Matchmaker</h2>
-
-<form action="ID" method="post">
-  <label for="hero_ID_1">Hero ID #1:</label><br>
-  <input type="text" id="hero_ID_1" name="hero_ID_1" value="" class="input"><br>
-  <label for="hero_ ID_2">Hero ID #2:</label><br>
-  <input type="text" id="hero_ID_2" name="hero_ID_2" value=""><br>
-  <input type="submit" value="See Genetic Makeup">
-</form> 
+<label for="hero_ID_1">Hero ID #1:</label>
+<input type="text" id="hero_ID_1" name="hero_ID_1" value="">
 <input id="matches" value="Find Matches" type="button" class="pixel"/>
-<p>Returns potential heroes</p>
+<p></p>
+
+<button type="button" class="collapsible" text-align="cent">Manual Match</button>
+<div class="content"><br>
+<label for="hero_ ID_2">Hero ID #2:</label><br>
+<input type="text" id="hero_ID_2" name="hero_ID_2" value=""><br>
+<input id="manual_match" type="button" value="Calcaulate Summon">
+</div>
+
+<p></p>
+
+<button type="button" class="collapsible" text-align="cent">Hero Genetic Info</button>
+<div class="content" id="hero_collapse"><br>
 <div class="row">
   <div class="column_1">
-    <h2>Gene - Hero {{ hero_ID_1 }}</h2>
+    <h3>Gene - Hero {{ hero_ID_1 }}</h3>
 <table id="hero1_data">
   <thead>
   <tr>
@@ -33,7 +42,7 @@
 </table>
 </div>
 <div class="column_1">
-<h2>Gene - Hero {{ hero_ID_2 }}</h2>
+<h3>Gene - Hero {{ hero_ID_2 }}</h3>
 <table id="hero2_data">
   <thead>
   <tr>
@@ -47,14 +56,22 @@
 </table>
 </div>
 </div>
-
-<h2> Potential Summon </h2>
-
-<div id = "summon_div", class="row">
-  
 </div>
 
-<h2> Potential Matches in Auction House </h2>
+
+
+<p></p>
+<button type="button" class="collapsible" text-align="cent">Summoning Probabilities</button>
+<div class="content"><br>
+
+<div id = "summon_div", class="row">
+
+</div>
+</div>
+<p></p>
+<button type="button" class="collapsible" text-align="cent">Potential Matches</button>
+<div class="content"><br>
+<p id="time"> </p>
 <table id="data" class="table table-striped">
   <thead>
     <tr>
@@ -72,6 +89,8 @@
   <tbody>
   </tbody>
 </table>
+
+</div>
 <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
@@ -85,6 +104,39 @@
   attris[4] = "Active_1"
   attris[5] = "Active_2"
   attris[6] = "Profession"
+
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+function toggleCollapse(coll, i) {
+    var content = coll.nextElementSibling;
+    if (i == 0) {
+      coll.classList.toggle("active");
+      if (content.style.maxHeight){
+        content.style.maxHeight = null;
+      } else {
+        content.style.maxHeight = content.scrollHeight + "px";
+      }
+    } else if (i == 1) {
+      if (content.style.maxHeight){
+      } else {
+        coll.classList.toggle("active");
+        content.style.maxHeight = content.scrollHeight + "px";
+      }
+    } else {
+      if (content.style.maxHeight){
+        coll.classList.toggle("active");
+        content.style.maxHeight = null;
+      } else {
+      }
+    }
+}
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    toggleCollapse(this, 0)   
+  });
+}
   $(document).ready(function() {
     var empty_matches = null
     tables = document.getElementById("summon_div")
@@ -159,7 +211,9 @@
     });
   };
   });
-    
+  $("#manual_match").on('click', function() {
+    alert("to be implemented")
+  })  
   $("#matches").on('click', function() {
     var matches
     var gene_response
@@ -180,11 +234,15 @@
     })
    $('#hero1_data').DataTable().clear().rows.add(matches.hero1).draw();
    table_data = $('#data').DataTable().clear().rows.add(matches.matches).draw();
-
+   $('#hero2_data').DataTable().clear().draw();
+   document.getElementById("time").innerHTML = "Auction House data last update: " + matches.last_update + " current time: " + matches.current_time;
+   toggleCollapse(coll[1], 1)
+   toggleCollapse(coll[2], 2)
+   toggleCollapse(coll[3], 1)
+   
   });
   $('#data').on('click', 'tbody tr', function () {
         var row_data = table_data.row($(this)).data();
-        alert("clicked")
         $.ajax({ 
           url: '/api/match', 
           type: 'POST', 
@@ -195,6 +253,7 @@
               $('#' + attris[attri]).DataTable().clear().rows.add(response.summon[attri]).draw();
             }
             $('#hero2_data').DataTable().clear().rows.add(response.hero2).draw();
+            toggleCollapse(coll[2], 1)
           } 
         })
     });
