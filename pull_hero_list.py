@@ -1,6 +1,3 @@
-from http.client import CONFLICT
-from re import M
-from turtle import end_fill
 from get_hero_data import *
 import requests
 import psycopg2
