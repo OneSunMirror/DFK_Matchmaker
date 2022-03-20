@@ -157,7 +157,10 @@ def pull_auction_str(cur):
       price = float(auction['startingPrice']) / 1000000000000000000
       #match_data = get_other_hero_data(get_contract(int(hero_id), rpc_add))
       auction_dict[hero_id] = [hero_id,  max_Summons, summons_left, generation, price, gene_prob.tolist(), mainClass, subClass, level, rarity]
-  auct_str = b', ' .join(cur.mogrify("(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", x) for x in auction_dict.values())  
+  auct_str = b', ' .join(cur.mogrify("(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", x) for x in auction_dict.values()) 
+  #print(auct_str)
+  #print(cur.mogrify("(-1, null, null, null, null, null, " + datetime.now().strftime("%d/%m/%Y %H:%M:%S")))
+  auct_str = auct_str + cur.mogrify(", ('-1', null, null, null, null, null, '" + datetime.now().strftime("%d/%m/%Y %H:%M:%S") + "', null, null, null)")
   return auct_str
 
 def auctions(auction_address, index, rpc_address):
@@ -194,9 +197,6 @@ def update_pg_auction():
   #print(data)
   conn.commit()
   conn.close()
-  f = open('log.txt', 'w')
-  f.write(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
-  f.close()
   return None
 #update_pg_auction()
 
@@ -234,10 +234,11 @@ def pull_pg_auction(hero_gene, search_space, hero_details):
   #print(data)
   #print(data[1])
   conn.commit()
+  SQL = """SELECT mainClass FROM Heroes Where id=-1"""
+  cur.execute(SQL)
+  last_update = cur.fetchall()
   conn.close()
-  f = open("log.txt","r")
-  last_update = f.read()
-  f.close()
+  
   found_data = {}
   matches = []
   print(len(data))
