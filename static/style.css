@@ -6,9 +6,8 @@
   margin-right: auto;
   text-align: center;
     }
-html {
-	
-	font-size: 12px;
+html {	
+	font-size: 18px;
 }
 body {
 	background: slategray;
@@ -16,6 +15,9 @@ body {
 	overflow-y: scroll;
 	padding: 2ch;
 	text-align: center;
+}
+.input_label{
+  font-size: 24px;
 }
     .input {
       border: 2px solid rgba(0, 0, 0, 0.6);
@@ -103,4 +105,30 @@ body {
   overflow: hidden;
   background-color: #f1f1f1;
   transition: max-height 0.2s ease-out;
+}
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }

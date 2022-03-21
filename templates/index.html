@@ -7,15 +7,19 @@
   <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}")>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-<h2>Defi Kingdoms Matchmaker</h2>
-<label for="hero_ID_1">Hero ID #1:</label>
+<h1>Defi Kingdoms Matchmaker</h1>
+<label class="inout_label" for="hero_ID_1"><a data-toggle="tooltip" title="Enter hero ID you wish to find matches for">&#x1F6C8;</a> Hero ID #1:</label>
 <input type="text" id="hero_ID_1" name="hero_ID_1" value="">
 <input id="matches" value="Find Matches" type="button" class="pixel"/>
 <p></p>
+<p>Tips <a data-toggle="tooltip" title="If this proves to be useful for enough people, tips will go towards upgrade heroku servers and future functionality upgrades">(&#x1F6C8; Where does it go to)</a> are appreciated @ 0xA5aed0dA6d7Ae07815b044702179192eAe5e3984  <i id='copy_tip' class="fa fa-copy" style="cursor:pointer"></i></p>
+<p></p>
 
-<button type="button" class="collapsible" text-align="cent">Manual Match</button>
+<button type="button" class="collapsible" text-align="cent"><a data-toggle="tooltip" title="Manually enter ID of the second hero rather than searching the Auction House">&#x1F6C8;</a> Manual Match</button>
 <div class="content"><br>
 <label for="hero_ ID_2">Hero ID #2:</label><br>
 <input type="text" id="hero_ID_2" name="hero_ID_2" value=""><br>
@@ -28,7 +32,7 @@
 <div class="content" id="hero_collapse"><br>
 <div class="row">
   <div class="column_1">
-    <h3>Gene - Hero {{ hero_ID_1 }}</h3>
+    <h3 id="hero1_text">Gene - Hero </h3>
 <table id="hero1_data">
   <thead>
   <tr>
@@ -42,7 +46,7 @@
 </table>
 </div>
 <div class="column_1">
-<h3>Gene - Hero {{ hero_ID_2 }}</h3>
+<h3 id="hero2_text">Gene - Hero </h3>
 <table id="hero2_data">
   <thead>
   <tr>
@@ -61,7 +65,7 @@
 
 
 <p></p>
-<button type="button" class="collapsible" text-align="cent">Summoning Probabilities</button>
+<button type="button" class="collapsible" text-align="cent">Summoning Probabilities<a data-toggle="tooltip" title="See Notes section on algorithm source">&#x1F6C8;</a></button>
 <div class="content"><br>
 
 <div id = "summon_div", class="row">
@@ -69,16 +73,17 @@
 </div>
 </div>
 <p></p>
-<button type="button" class="collapsible" text-align="cent">Potential Matches</button>
+<button type="button" class="collapsible" text-align="cent">Potential Matches <a data-toggle="tooltip" title="Based on data periodically pulled from Sales Auction House (Rent auction, to be implemented) ">&#x1F6C8;</a></button>
 <div class="content"><br>
 <p id="time"> </p>
-<table id="data" class="table table-striped">
+<table id="data" class="table table-striped" style="cursor:pointer">
   <thead>
     <tr>
       <th>ID</th>
-      <th>Total Score</th>
-      <th>Class Score</th>
-      <th>Attri Score</th>
+      <th>Total Score<a data-toggle="tooltip" title="Aggretate score of likely Class and Skill upgrade">&#x1F6C8;</a></th>
+      <th>Class Score<a data-toggle="tooltip" title="Based on likelihood of complementary class being selected in the summoning process (higher score means higher chance of class upgrade in summon)">&#x1F6C8;</a></th>
+      <th>Attri Score<a data-toggle="tooltip" title="Based on likelihood of complementary skill being selected in the summoning process (higher score means higher chance of skill upgrade in summon) averaged over all 4 skills">&#x1F6C8;</a></th>
+      <th>Summons</th>
       <th>Class</th>
       <th>Sub Class</th>
       <th>Rarity</th>
@@ -91,6 +96,12 @@
 </table>
 
 </div>
+<p></p>
+<button type="button" class="collapsible" text-align="cent"> Notes</button>
+<div class="content"><br>
+<p>Thanks to <a href="https://github.com/0rtis/dfk/tree/master/hero">0tis</a> for Hero and Auction House API code  </p>
+<p>Thanks to Mr Zipper for <a href="https://medium.com/@MrZipper7/deep-dive-hero-genetics-975902dfbf80">Class</a> and <a href="https://medium.com/@MrZipper7/deep-dive-active-passive-genes-68315567361c">Skills/Combat </a>Summoning Algorithms  </p>
+
 <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
@@ -167,6 +178,7 @@ for (i = 0; i < coll.length; i++) {
         {data: "Total Score"},
         {data: "Class Score"},
         {data: "Attrib Score"},
+        {data: "Summons"},
         {data: "Class"},
         {data: "Sub Class"},
         {data: "Rarity"},
@@ -214,6 +226,10 @@ for (i = 0; i < coll.length; i++) {
   $("#manual_match").on('click', function() {
     alert("to be implemented")
   })  
+  $("#copy_tip").on('click', function() {
+    navigator.clipboard.writeText('0xA5aed0dA6d7Ae07815b044702179192eAe5e3984')
+  })
+
   $("#matches").on('click', function() {
     var matches
     var gene_response
@@ -234,6 +250,7 @@ for (i = 0; i < coll.length; i++) {
     })
    $('#hero1_data').DataTable().clear().rows.add(matches.hero1).draw();
    table_data = $('#data').DataTable().clear().rows.add(matches.matches).draw();
+   document.getElementById("hero1_text").innerHTML = "Hero Data for: " + id_1
    $('#hero2_data').DataTable().clear().draw();
    document.getElementById("time").innerHTML = "Auction House data last update: " + matches.last_update + " current time: " + matches.current_time;
    toggleCollapse(coll[1], 1)
@@ -254,6 +271,7 @@ for (i = 0; i < coll.length; i++) {
             }
             $('#hero2_data').DataTable().clear().rows.add(response.hero2).draw();
             toggleCollapse(coll[2], 1)
+            document.getElementById("hero2_text").innerHTML = "Hero Data for: " + id_2
           } 
         })
     });

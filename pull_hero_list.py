@@ -150,13 +150,13 @@ def pull_auction_str(cur):
       max_Summons = int(auction['tokenId']['maxSummons'])
       summons_left = max_Summons - int(auction['tokenId']['summons'])
       generation = int(auction['tokenId']['generation'])
-      rarity = int(auction['tokenId']['rarity'])
+      c_rarity = rarity[int(auction['tokenId']['rarity'])]
       mainClass = auction['tokenId']['mainClass']
       subClass = auction['tokenId']['subClass']
       level = int(auction['tokenId']['level'])
       price = float(auction['startingPrice']) / 1000000000000000000
       #match_data = get_other_hero_data(get_contract(int(hero_id), rpc_add))
-      auction_dict[hero_id] = [hero_id,  max_Summons, summons_left, generation, price, gene_prob.tolist(), mainClass, subClass, level, rarity]
+      auction_dict[hero_id] = [hero_id,  max_Summons, summons_left, generation, price, gene_prob.tolist(), mainClass, subClass, level, c_rarity]
   auct_str = b', ' .join(cur.mogrify("(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", x) for x in auction_dict.values()) 
   #print(auct_str)
   #print(cur.mogrify("(-1, null, null, null, null, null, " + datetime.now().strftime("%d/%m/%Y %H:%M:%S")))
@@ -255,7 +255,11 @@ def pull_pg_auction(hero_gene, search_space, hero_details):
         dict_attri[stat_traits[i] + ' Score'] = match[i+9]
       elif (i >= 3) and (i <= 6):
         comb_score += match[j+9]
-      dict_attri['Attrib Score'] = comb_score
+      dict_attri['Attrib Score'] = comb_score / 4
+      if dict_attri['Summons Left'] < 0:
+        dict_attri['Summons'] = "N/A Gen 0"
+      else:
+        dict_attri['Summons'] = str(dict_attri['Summons Left']) + "/" + str(dict_attri['Max Summons']) 
       dict_attri['Total Score'] = tot_score + comb_score / 4 
       j += 1
     matches.append(dict_attri)
