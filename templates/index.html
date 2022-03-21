@@ -16,7 +16,7 @@
 <input type="text" id="hero_ID_1" name="hero_ID_1" value="">
 <input id="matches" value="Find Matches" type="button" class="pixel"/>
 <p></p>
-<p>Tips <a data-toggle="tooltip" title="If this proves to be useful for enough people, tips will go towards upgrade heroku servers and future functionality upgrades">(&#x1F6C8; Where does it go to)</a> are appreciated @ 0xA5aed0dA6d7Ae07815b044702179192eAe5e3984  <i id='copy_tip' class="fa fa-copy" style="cursor:pointer"></i></p>
+<p>Tips <a data-toggle="tooltip" title="If this proves to be useful for enough people, tips will go towards upgrade heroku servers and future functionality upgrades">(&#x1F6C8;</a> are greatly appreciated @ 0xA5aed0dA6d7Ae07815b044702179192eAe5e3984  <i id='copy_tip' class="fa fa-copy" style="cursor:pointer"></i></p>
 <p></p>
 
 <button type="button" class="collapsible" text-align="cent"><a data-toggle="tooltip" title="Manually enter ID of the second hero rather than searching the Auction House">&#x1F6C8;</a> Manual Match</button>
@@ -65,7 +65,7 @@
 
 
 <p></p>
-<button type="button" class="collapsible" text-align="cent">Summoning Probabilities<a data-toggle="tooltip" title="See Notes section on algorithm source">&#x1F6C8;</a></button>
+<button type="button" class="collapsible" text-align="cent"><a data-toggle="tooltip" title="See Notes section on algorithm source">&#x1F6C8;</a>Summoning Probabilities</button>
 <div class="content"><br>
 
 <div id = "summon_div", class="row">
@@ -73,16 +73,17 @@
 </div>
 </div>
 <p></p>
-<button type="button" class="collapsible" text-align="cent">Potential Matches <a data-toggle="tooltip" title="Based on data periodically pulled from Sales Auction House (Rent auction, to be implemented) ">&#x1F6C8;</a></button>
+<button type="button" class="collapsible" text-align="cent"><a data-toggle="tooltip" title="Based on data periodically pulled from Sales Auction House (Rent auction, to be implemented) ">&#x1F6C8;</a>Potential Matches </button>
 <div class="content"><br>
-<p id="time"> </p>
+  <p>To Calculate Match Probabilities, Click on any row in the table below </p>
+  <p id="time"> </p>
 <table id="data" class="table table-striped" style="cursor:pointer">
   <thead>
     <tr>
       <th>ID</th>
       <th>Total Score<a data-toggle="tooltip" title="Aggretate score of likely Class and Skill upgrade">&#x1F6C8;</a></th>
       <th>Class Score<a data-toggle="tooltip" title="Based on likelihood of complementary class being selected in the summoning process (higher score means higher chance of class upgrade in summon)">&#x1F6C8;</a></th>
-      <th>Attri Score<a data-toggle="tooltip" title="Based on likelihood of complementary skill being selected in the summoning process (higher score means higher chance of skill upgrade in summon) averaged over all 4 skills">&#x1F6C8;</a></th>
+      <th>Skill Score<a data-toggle="tooltip" title="Based on likelihood of complementary skill being selected in the summoning process (higher score means higher chance of skill upgrade in summon) averaged over all 4 skills">&#x1F6C8;</a></th>
       <th>Summons</th>
       <th>Class</th>
       <th>Sub Class</th>

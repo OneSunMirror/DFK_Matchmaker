@@ -61,29 +61,29 @@ rpc_add = "https://api.harmony.one/"
 "source https://github.com/0rtis/dfk/blob/master/hero/..."
 
 rarity = {
-    0: "common",
-    1: "uncommon",
-    2: "rare",
-    3: "legendary",
-    4: "mythic",
+    0: "Common",
+    1: "Uncommon",
+    2: "Rare",
+    3: "Legendary",
+    4: "Mythic",
 }
 
 _class = {
-    0: "warrior",
-    1: "knight",
-    2: "thief",
-    3: "archer",
-    4: "priest",
-    5: "wizard",
-    6: "monk",
-    7: "pirate",
-    16: "paladin",
-    17: "darkKnight",
-    18: "summoner",
-    19: "ninja",
-    24: "dragoon",
-    25: "sage",
-    28: "dreadKnight"
+    0: "Warrior",
+    1: "Knight",
+    2: "Thief",
+    3: "Archer",
+    4: "Priest",
+    5: "Wizard",
+    6: "Monk",
+    7: "Pirate",
+    16: "Paladin",
+    17: "DarkKnight",
+    18: "Summoner",
+    19: "Ninja",
+    24: "Dragoon",
+    25: "Sage",
+    28: "DreadKnight"
 }
 
 _ability_gene = {
@@ -149,18 +149,18 @@ complement_gene = {
     28: 28
 }
 professions = {
-    0: 'mining',
-    2: 'gardening',
-    4: 'fishing',
-    6: 'foraging',
+    0: 'Mining',
+    2: 'Gardening',
+    4: 'Fishing',
+    6: 'Foraging',
 }
 
 hero_rarity = {
-    0: "common",
-    1: "uncommon",
-    2: "rare",
-    3: "legendary",
-    4: "mythic",
+    0: "Common",
+    1: "Uncommon",
+    2: "Rare",
+    3: "Legendary",
+    4: "Mythic",
 }
 
 stats = {

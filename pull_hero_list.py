@@ -220,10 +220,10 @@ def pull_pg_auction(hero_gene, search_space, hero_details):
         if hero_gene[i][j] >= 0.75:
           search_space_txt += ', gene[%s][%s]' % (i+1, complement_gene[j]+1)
   sql_str = 'SELECT id, mainclass, subclass, rarity, generation, maxsummons, summonsleft, level, price' + search_space_txt + ' FROM Heroes Where ('
-  print(sql_str)
+  #print(sql_str)
   SQL = cur.mogrify(sql_str)
   for i in search_space:
-    print(hero_gene[i])
+    #print(hero_gene[i])
     for j in range(0,len(hero_gene[i])):
         if hero_gene[i][j] >= 0.75:
           SQL = SQL + cur.mogrify('gene[%s][%s] >= 0.75', (i+1, complement_gene[j]+1)) + b' OR '
@@ -239,9 +239,8 @@ def pull_pg_auction(hero_gene, search_space, hero_details):
   last_update = cur.fetchall()
   conn.close()
   
-  found_data = {}
   matches = []
-  print(len(data))
+  #print(len(data))
   for match in data:
     #match_data = get_other_hero_data(get_contract(match[0], rpc_add))
     attributes= ['ID', 'Class', 'Sub Class', 'Rarity', 'Generation', 'Max Summons', 'Summons Left', 'level', 'Price']
