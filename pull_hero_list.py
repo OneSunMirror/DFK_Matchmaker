@@ -135,21 +135,28 @@ def get_hero_open_auctions(graphql_address, hero_ids):
         raise Exception("HTTP error " + str(r.status_code) + ": " + r.text)
     data = r.json()
     return data['data']['saleAuctions']
+def convert_int(in_str):
+  if str(in_str).isnumeric():
+    return int(in_str)
+  else:
+    return 0
 
 def pull_auction_str(cur):
   auction_dict  = {}
   for i in range(1, 10000, 1000):
     auct_dict = get_open_auctions(graphql, 1000, i)
-    print(len(auct_dict))
+
+    #print(len(auct_dict))
+    #print(auct_dict)
     if(len(auct_dict) == 0):
       break
     for auction in auct_dict:
       hero_id = auction['tokenId']['id']
-      #print(auction['id'], hero_id)
-      gene_prob, __ = calc_prob(int(auction['tokenId']['statGenes']))
+      print(auction['tokenId'])
+      gene_prob, __ = calc_prob(convert_int(auction['tokenId']['statGenes']))
       max_Summons = int(auction['tokenId']['maxSummons'])
       summons_left = max_Summons - int(auction['tokenId']['summons'])
-      generation = int(auction['tokenId']['generation'])
+      generation = convert_int(auction['tokenId']['generation'])
       c_rarity = rarity[int(auction['tokenId']['rarity'])]
       mainClass = auction['tokenId']['mainClass']
       subClass = auction['tokenId']['subClass']
