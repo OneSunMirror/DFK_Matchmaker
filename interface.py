@@ -68,5 +68,6 @@ def data():
     #print(int(id))
     res = {}
     res['hero2'] = gene_details_2
+    res['hero1'] = gene_details_1
     res['summon'] = summon_result
     return json.dumps(res)

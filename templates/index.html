@@ -12,18 +12,31 @@
 </head>
 <body>
 <h1>Defi Kingdoms Matchmaker</h1>
+<p></p>
+<p>Tips <a data-toggle="tooltip" title="If this proves to be useful for enough people, tips will go towards upgrade heroku servers and future functionality upgrades">&#x1F6C8;</a> are greatly appreciated @ 0xA5aed0dA6d7Ae07815b044702179192eAe5e3984  <i id='copy_tip' class="fa fa-copy" style="cursor:pointer"></i></p>
+<p></p>
+
+<button type="button" class="collapsible" text-align="cent"><a data-toggle="tooltip" title="Search against Auction Houses">&#x1F6C8;</a> Search Auction House</button>
+<div class="content"><br>
+
 <label class="inout_label" for="hero_ID_1"><a data-toggle="tooltip" title="Enter hero ID you wish to find matches for">&#x1F6C8;</a> Hero ID #1:</label>
 <input type="text" id="hero_ID_1" name="hero_ID_1" value="">
 <input id="matches" value="Find Matches" type="button" class="pixel"/>
+</div>
 <p></p>
-<p>Tips <a data-toggle="tooltip" title="If this proves to be useful for enough people, tips will go towards upgrade heroku servers and future functionality upgrades">(&#x1F6C8;</a> are greatly appreciated @ 0xA5aed0dA6d7Ae07815b044702179192eAe5e3984  <i id='copy_tip' class="fa fa-copy" style="cursor:pointer"></i></p>
-<p></p>
-
 <button type="button" class="collapsible" text-align="cent"><a data-toggle="tooltip" title="Manually enter ID of the second hero rather than searching the Auction House">&#x1F6C8;</a> Manual Match</button>
 <div class="content"><br>
-<label for="hero_ ID_2">Hero ID #2:</label><br>
-<input type="text" id="hero_ID_2" name="hero_ID_2" value=""><br>
-<input id="manual_match" type="button" value="Calcaulate Summon">
+  <div class="row">
+    <div class="column_1">
+      <label for="hero_ID_1_m">Hero ID #1:</label><br>
+      <input type="text" id="hero_ID_1_m" name="hero_ID_1_m" value=""><br>  
+  </div>
+  <div class="column_1">
+    <label for="hero_ID_2">Hero ID #2:</label><br>
+    <input type="text" id="hero_ID_2" name="hero_ID_2" value=""><br>  
+  </div>
+  </div>
+  <input id="manual_match" type="button" value="Calcaulate Summon">
 </div>
 
 <p></p>
@@ -151,6 +164,7 @@ for (i = 0; i < coll.length; i++) {
 }
   $(document).ready(function() {
     var empty_matches = null
+    toggleCollapse(coll[0], 1)
     tables = document.getElementById("summon_div")
     for (attri in attris) {
        div = document.createElement("div");
@@ -225,7 +239,25 @@ for (i = 0; i < coll.length; i++) {
   };
   });
   $("#manual_match").on('click', function() {
-    alert("to be implemented")
+    $.ajax({ 
+          url: '/api/match', 
+          type: 'POST', 
+          data: JSON.stringify({'id_2' : $('#hero_ID_2').val(), 'id_1' : $('#hero_ID_1_m').val()}),
+          'dataType': 'json',
+          success: function(response){ 
+            for (attri in attris) {
+              $('#' + attris[attri]).DataTable().clear().rows.add(response.summon[attri]).draw();
+            }
+            $('#hero2_data').DataTable().clear().rows.add(response.hero2).draw();
+            $('#hero1_data').DataTable().clear().rows.add(response.hero1).draw();
+            toggleCollapse(coll[0], 2)  
+            toggleCollapse(coll[3], 1)
+            toggleCollapse(coll[2], 1)
+            toggleCollapse(coll[4], 2)
+            document.getElementById("hero2_text").innerHTML = "Hero Data for: " + $('#hero_ID_2').val()
+            document.getElementById("hero1_text").innerHTML = "Hero Data for: " + $('#hero_ID_1_m').val()
+          } 
+        })
   })  
   $("#copy_tip").on('click', function() {
     navigator.clipboard.writeText('0xA5aed0dA6d7Ae07815b044702179192eAe5e3984')
@@ -254,9 +286,9 @@ for (i = 0; i < coll.length; i++) {
    document.getElementById("hero1_text").innerHTML = "Hero Data for: " + id_1
    $('#hero2_data').DataTable().clear().draw();
    document.getElementById("time").innerHTML = "Auction House data last update: " + matches.last_update + " current time: " + matches.current_time;
-   toggleCollapse(coll[1], 1)
-   toggleCollapse(coll[2], 2)
-   toggleCollapse(coll[3], 1)
+   toggleCollapse(coll[2], 1)
+   toggleCollapse(coll[3], 2)
+   toggleCollapse(coll[4], 1)
    
   });
   $('#data').on('click', 'tbody tr', function () {
@@ -271,7 +303,7 @@ for (i = 0; i < coll.length; i++) {
               $('#' + attris[attri]).DataTable().clear().rows.add(response.summon[attri]).draw();
             }
             $('#hero2_data').DataTable().clear().rows.add(response.hero2).draw();
-            toggleCollapse(coll[2], 1)
+            toggleCollapse(coll[3], 1)
             document.getElementById("hero2_text").innerHTML = "Hero Data for: " + id_2
           } 
         })
