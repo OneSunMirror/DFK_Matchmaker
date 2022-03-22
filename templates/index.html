@@ -300,13 +300,12 @@ for (i = 0; i < coll.length; i++) {
           data: JSON.stringify({'id_2' : row_data.ID, 'id_1' : id_1}),
           'dataType': 'json',
           success: function(response){ 
-            document.getElementById("hero2_text").innerHTML = "Hero Data for: " + id_2;
-            toggleCollapse(coll[3], 1);
             for (attri in attris) {
               $('#' + attris[attri]).DataTable().clear().rows.add(response.summon[attri]).draw();
             }
             $('#hero2_data').DataTable().clear().rows.add(response.hero2).draw();
-
+            document.getElementById("hero2_text").innerHTML = "Hero Data for: " + row_data.ID
+            toggleCollapse(coll[3], 1);
           } 
         })
     });
