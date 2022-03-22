@@ -152,7 +152,7 @@ def pull_auction_str(cur):
       break
     for auction in auct_dict:
       hero_id = auction['tokenId']['id']
-      print(auction['tokenId'])
+      #print(auction['tokenId'])
       gene_prob, __ = calc_prob(convert_int(auction['tokenId']['statGenes']))
       max_Summons = int(auction['tokenId']['maxSummons'])
       summons_left = max_Summons - int(auction['tokenId']['summons'])
