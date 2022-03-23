@@ -112,7 +112,28 @@ AUCTIONS_OPEN_GRAPHQL_QUERY_FAST = """
                         }
                         """
 
-    
+AUCTIONS_OPEN_GRAPHQL_QUERY_FAST_rent = """
+                        query {
+                          assistingAuctions(first: %d, skip: %d, orderBy: startedAt, orderDirection: asc, where: {open: true}) {
+                            id
+                            tokenId {
+                              id
+                              maxSummons
+                              statGenes
+                              level
+                              summons
+                              generation
+                              rarity
+                              mainClass
+                              subClass
+                              level
+                              }
+                            startingPrice
+                            endingPrice
+                            open
+                          }
+                        }
+                        """  
 graphql = 'https://defi-kingdoms-community-api-gateway-co06z8vi.uc.gateway.dev/graphql'
 SALE_AUCTIONS_CONTRACT_ADDRESS = '0x13a65B9F8039E2c032Bc022171Dc05B30c3f2892'
 def get_open_auctions(graphql_address, count, skip):
@@ -122,19 +143,22 @@ def get_open_auctions(graphql_address, count, skip):
     if r.status_code != 200:
         raise Exception("HTTP error " + str(r.status_code) + ": " + r.text)
     data = r.json()
+    
     return data['data']['saleAuctions']
 
-def get_hero_open_auctions(graphql_address, hero_ids):
-    str_hero_ids = "["
-    for id in hero_ids:
-        str_hero_ids = str_hero_ids + "\"" + str(id) + "\", "
-    str_hero_ids = str_hero_ids + "]"
+def get_open_rent_auctions(graphql_address, count, skip):
 
-    r = requests.post(graphql_address, json={'query': AUCTIONS_TOKEN_IDS_GRAPHQL_QUERY_FAST % str_hero_ids})
+    r = requests.post(graphql_address, json={'query': AUCTIONS_OPEN_GRAPHQL_QUERY_FAST_rent % (count, skip)})
+
     if r.status_code != 200:
         raise Exception("HTTP error " + str(r.status_code) + ": " + r.text)
     data = r.json()
-    return data['data']['saleAuctions']
+    return data['data']['assistingAuctions']
+
+#for i in range(1, 10000, 1000):
+#    a = get_open_rent_auctions(graphql, 1000, i)
+#    print(len)
+
 def convert_int(in_str):
   if str(in_str).isnumeric():
     return int(in_str)
@@ -146,7 +170,7 @@ def pull_auction_str(cur):
   for i in range(1, 10000, 1000):
     auct_dict = get_open_auctions(graphql, 1000, i)
 
-    #print(len(auct_dict))
+    print(len(auct_dict))
     #print(auct_dict)
     if(len(auct_dict) == 0):
       break
