@@ -16,6 +16,10 @@ body {
 	padding: 2ch;
 	text-align: center;
 }
+.scale {
+  height: 1.5em;
+  width: 1.5em;
+}
 .input_label{
   font-size: 24px;
 }
