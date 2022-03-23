@@ -187,6 +187,7 @@ for (i = 0; i < coll.length; i++) {
     var table_data = $('#data').DataTable({ 
       data : empty_matches, searching : false, info : false,
       retrive : true,
+      responsive : true,
       "aaSorting": [1, "desc"],
       columns: [
         {data: "ID"},
@@ -205,6 +206,7 @@ for (i = 0; i < coll.length; i++) {
       data : empty_matches,
       retrive :true, searching : false, info : false, paging : false, 
       "aaSorting": [],
+      responsive : true,
       columns: [
         {data: "type"},
         {data: "D"},
@@ -215,6 +217,7 @@ for (i = 0; i < coll.length; i++) {
     });
     $('#hero2_data').DataTable({ 
       data : empty_matches, 
+      responsive : true,
       retrive : true, searching : false, info : false, paging : false,
       "aaSorting": [],
       columns: [
@@ -229,6 +232,7 @@ for (i = 0; i < coll.length; i++) {
     $('#' + attris[attri]).DataTable(
       { 
       data : empty_matches,
+      responsive : true,
       retrive : true, searching : false, info : false, paging : false,
       "aaSorting": [],
       columns: [
