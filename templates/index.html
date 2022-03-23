@@ -44,7 +44,7 @@
 <button type="button" class="collapsible" text-align="cent">Hero Genetic Info</button>
 <div class="content" id="hero_collapse"><br>
 <div class="row">
-  <div class="column_1">
+  <div class="column_1" style="overflow-x:auto;">
     <h3><text id="hero1_text"> Gene - Hero </text> <img class="scale" src="{{url_for('static', filename='Yellow_Heart_Left.png')}}" /></h3>
 <table id="hero1_data">
   <thead>
@@ -58,7 +58,7 @@
 </thead>
 </table>
 </div>
-<div class="column_1">
+<div class="column_1" style="overflow-x:auto;">
 <h3> <img class="scale" src="{{url_for('static', filename='Yellow_Heart_Right.png')}}" /> <text id="hero2_text"> Gene - Hero </text> </h3>
 <table id="hero2_data">
   <thead>
@@ -90,7 +90,7 @@
 <div class="content"><br>
   <p>To Calculate Match Probabilities, Click on any row in the table below </p>
   <p id="time"> </p>
-<table id="data" class="table table-striped" style="cursor:pointer; width:100%">
+<table id="data" class="table table-striped" style="cursor:pointer">
   <thead>
     <tr>
       <th> <img class="scale" src="{{url_for('static', filename='Yellow_Heart_Right.png')}}" /> ID </th>
