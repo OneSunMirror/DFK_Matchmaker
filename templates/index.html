@@ -10,7 +10,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-<h1><img class="scale" src="{{url_for('static', filename='Yellow_Heart_Full.png')}}" /> Defi Kingdoms Matchmaker <img class="scale" src="{{url_for('static', filename='Yellow_Heart_Full.png')}}" /></h1>
+<h1><img class="scale" src="{{url_for('static', filename='heart.png')}}" /> Defi Kingdoms Matchmaker <img class="scale" src="{{url_for('static', filename='heart.png')}}" /></h1>
 <p></p>
 <p>Tips <a data-toggle="tooltip" title="If this proves to be useful for enough people, tips will go towards upgrade heroku servers and future functionality upgrades">&#x1F6C8;</a> are greatly appreciated @ 0xA5aed0dA6d7Ae07815b044702179192eAe5e3984  <i id='copy_tip' class="fa fa-copy" style="cursor:pointer"></i></p>
 <p>Find me @osm#9250 in DFK Discord for suggestions/bugs report</p>
@@ -18,7 +18,7 @@
 <button type="button" class="collapsible" text-align="cent"><a data-toggle="tooltip" title="Search against Auction Houses">&#x1F6C8;</a> Search Auction House</button>
 <div class="content"><br>
 
-<label class="inout_label" for="hero_ID_1"><a data-toggle="tooltip" title="Enter hero ID you wish to find matches for">&#x1F6C8;</a> Hero ID #1:<img class="scale" src="{{url_for('static', filename='Yellow_Heart_Left.png')}}" /></label>
+<label class="inout_label" for="hero_ID_1"><a data-toggle="tooltip" title="Enter hero ID you wish to find matches for">&#x1F6C8;</a> Hero ID #1:<img class="scale2" src="{{url_for('static', filename='heart_Left.png')}}" /></label>
 <input type="text" id="hero_ID_1" name="hero_ID_1" value="">
 <input id="matches" value="Find Matches" type="button" class="pixel"/>
 </div>
@@ -27,11 +27,11 @@
 <div class="content"><br>
   <div class="row">
     <div class="column_1">
-      <label for="hero_ID_1_m">Hero ID #1: <img class="scale" src="{{url_for('static', filename='Yellow_Heart_Left.png')}}" /></label><br>
+      <label for="hero_ID_1_m">Hero ID #1: <img class="scale2" src="{{url_for('static', filename='heart_left.png')}}" /></label><br>
       <input type="text" id="hero_ID_1_m" name="hero_ID_1_m" value=""><br>  
   </div>
   <div class="column_1">
-    <label for="hero_ID_2"><img class= "scale" src="{{url_for('static', filename='Yellow_Heart_Right.png')}}" />Hero ID #2:</label><br>
+    <label for="hero_ID_2"><img class= "scale2" src="{{url_for('static', filename='heart_right.png')}}" />Hero ID #2:</label><br>
     <input type="text" id="hero_ID_2" name="hero_ID_2" value=""><br>  
   </div>
   </div>
@@ -44,7 +44,7 @@
 <div class="content" id="hero_collapse"><br>
 <div class="row" style="overflow-x:auto;">
   <div class="column_1">
-    <h3><text id="hero1_text"> Gene - Hero </text> <img class="scale" src="{{url_for('static', filename='Yellow_Heart_Left.png')}}" /></h3>
+    <h3><text id="hero1_text"> Gene - Hero </text> <img class="scale2" src="{{url_for('static', filename='heart_left.png')}}" /></h3>
 <table id="hero1_data">
   <thead>
   <tr>
@@ -58,7 +58,7 @@
 </table>
 </div>
 <div class="column_1" >
-<h3> <img class="scale" src="{{url_for('static', filename='Yellow_Heart_Right.png')}}" /> <text id="hero2_text"> Gene - Hero </text> </h3>
+<h3> <img class="scale2" src="{{url_for('static', filename='heart_right.png')}}" /> <text id="hero2_text"> Gene - Hero </text> </h3>
 <table id="hero2_data">
   <thead>
   <tr>
@@ -79,7 +79,7 @@
 <p></p>
 <button type="button" class="collapsible" text-align="cent"><a data-toggle="tooltip" title="See Notes section on algorithm source">&#x1F6C8;</a>Summoning Probabilities</button>
 <div class="content"><br>
-<h3><img class="scale" src="{{url_for('static', filename='Yellow_Heart_Full.png')}}" /></h3>
+<h3><img class="scale" src="{{url_for('static', filename='heart.png')}}" /></h3>
 <div id = "summon_div", class="row">
 
 </div>
@@ -92,7 +92,7 @@
 <table id="data" class="table table-striped" style="cursor:pointer">
   <thead>
     <tr>
-      <th> <img class="scale" src="{{url_for('static', filename='Yellow_Heart_Right.png')}}" /> ID </th>
+      <th> <img class="scale2" src="{{url_for('static', filename='heart_right.png')}}" /> ID </th>
       <th>Total Score<a data-toggle="tooltip" title="Aggretate score of likely Class and Skill upgrade">&#x1F6C8;</a></th>
       <th>Class Score<a data-toggle="tooltip" title="Based on likelihood of complementary class being selected in the summoning process (higher score means higher chance of class upgrade in summon)">&#x1F6C8;</a></th>
       <th>Skill Score<a data-toggle="tooltip" title="Based on likelihood of complementary skill being selected in the summoning process (higher score means higher chance of skill upgrade in summon) averaged over all 4 skills">&#x1F6C8;</a></th>
@@ -310,6 +310,7 @@ for (i = 0; i < coll.length; i++) {
             $('#hero2_data').DataTable().clear().rows.add(response.hero2).draw();
             document.getElementById("hero2_text").innerHTML = "Hero Data for: " + row_data.ID
             toggleCollapse(coll[3], 1);
+            toggleCollapse(coll[2], 1)
           } 
         })
     });
