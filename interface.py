@@ -19,22 +19,6 @@ potential_match = pull_pg_auction(gene_prob, [0], hero_details)
 def init():
     return render_template('index.html')
 
-@app.route('/ID', methods=['POST'])
-def find_genes():
-    hero_ID_1 = request.form['hero_ID_1']
-    hero_ID_2 = request.form['hero_ID_2']
-    hero_1_contract = get_contract(int(hero_ID_1), rpc_add)
-    hero_2_contract = get_contract(int(hero_ID_2), rpc_add)
-    gene_prob_1, gene_details_1 = get_gene_prob(hero_1_contract)
-    gene_prob_2, gene_details_2 = get_gene_prob(hero_2_contract)
-    summon_result = calc_likelyhood(gene_prob_1, gene_prob_2)   
-    hero_1_details = get_other_hero_data(hero_1_contract)
-    potential_match = pull_pg_auction(gene_prob_1, [0], hero_1_details)
-    print(summon_result) 
-    attributes= ['ID', 'Class', 'Sub Class', 'Rarity', 'Generation', 'Max Summons', 'Summons Left', 'level', 'Price']
-    return render_template('index.html', attributes=attributes, hero_ID_1=hero_ID_1, hero_ID_2=hero_ID_2, summon_result=summon_result, gene_details_1=gene_details_1, gene_details_2=gene_details_2)
-
-
 @app.route('/api/update', methods=['POST'])
 def update():
     hero_ID_1 = request.form['hero_ID_1']

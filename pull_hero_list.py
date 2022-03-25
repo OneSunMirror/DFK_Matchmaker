@@ -149,15 +149,11 @@ def get_open_auctions(graphql_address, count, skip):
 def get_open_rent_auctions(graphql_address, count, skip):
 
     r = requests.post(graphql_address, json={'query': AUCTIONS_OPEN_GRAPHQL_QUERY_FAST_rent % (count, skip)})
-
     if r.status_code != 200:
         raise Exception("HTTP error " + str(r.status_code) + ": " + r.text)
     data = r.json()
     return data['data']['assistingAuctions']
 
-#for i in range(1, 10000, 1000):
-#    a = get_open_rent_auctions(graphql, 1000, i)
-#    print(len)
 
 def convert_int(in_str):
   if str(in_str).isnumeric():
@@ -169,30 +165,40 @@ def pull_auction_str(cur):
   auction_dict  = {}
   for i in range(1, 10000, 1000):
     auct_dict = get_open_auctions(graphql, 1000, i)
-
     print(len(auct_dict))
     #print(auct_dict)
     if(len(auct_dict) == 0):
       break
     for auction in auct_dict:
-      hero_id = auction['tokenId']['id']
-      #print(auction['tokenId'])
-      gene_prob, __ = calc_prob(convert_int(auction['tokenId']['statGenes']))
       max_Summons = int(auction['tokenId']['maxSummons'])
       summons_left = max_Summons - int(auction['tokenId']['summons'])
-      generation = convert_int(auction['tokenId']['generation'])
-      c_rarity = rarity[int(auction['tokenId']['rarity'])]
-      mainClass = auction['tokenId']['mainClass']
-      subClass = auction['tokenId']['subClass']
-      level = int(auction['tokenId']['level'])
-      price = float(auction['startingPrice']) / 1000000000000000000
-      #match_data = get_other_hero_data(get_contract(int(hero_id), rpc_add))
-      auction_dict[hero_id] = [hero_id,  max_Summons, summons_left, generation, price, gene_prob.tolist(), mainClass, subClass, level, c_rarity]
+      if (summons_left != 0):
+        hero_id = auction['tokenId']['id']
+        #print(auction['tokenId'])
+        gene_prob, __ = calc_prob(convert_int(auction['tokenId']['statGenes']))
+        generation = convert_int(auction['tokenId']['generation'])
+        c_rarity = rarity[int(auction['tokenId']['rarity'])]
+        mainClass = auction['tokenId']['mainClass']
+        subClass = auction['tokenId']['subClass']
+        level = int(auction['tokenId']['level'])
+        price = float(auction['startingPrice']) / 1000000000000000000
+        #match_data = get_other_hero_data(get_contract(int(hero_id), rpc_add))
+        auction_dict[hero_id] = [hero_id,  max_Summons, summons_left, generation, price, gene_prob.tolist(), mainClass, subClass, level, c_rarity]
+    print(len(auction_dict))
+  
+  
   auct_str = b', ' .join(cur.mogrify("(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", x) for x in auction_dict.values()) 
   #print(auct_str)
   #print(cur.mogrify("(-1, null, null, null, null, null, " + datetime.now().strftime("%d/%m/%Y %H:%M:%S")))
   auct_str = auct_str + cur.mogrify(", ('-1', null, null, null, null, null, '" + datetime.now().strftime("%d/%m/%Y %H:%M:%S") + "', null, null, null)")
   return auct_str
+
+#DATABASE_URL = os.environ['DATABASE_URL']
+#conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+#cur = conn.cursor()
+#pull_auction_str(cur)
+
+
 
 def auctions(auction_address, index, rpc_address):
     w3 = Web3(Web3.HTTPProvider(rpc_address))
@@ -207,17 +213,17 @@ def auctions(auction_address, index, rpc_address):
 def update_pg_auction():
   DATABASE_URL = os.environ['DATABASE_URL']
   print(DATABASE_URL)
-  conn = psycopg2.connect(DATABASE_URL, sslmode='require')
   #conn = psycopg2.connect(
   #      host="localhost",
   ##      database="Heroes_all",
    #     user="postgres",
    #     password="asdqwe123")
+  conn = psycopg2.connect(DATABASE_URL, sslmode='require')
   cur = conn.cursor()
+  auction_str = pull_auction_str(cur)
   SQL = cur.mogrify('DELETE From heroes')
   cur.execute(SQL)
   conn.commit()
-  auction_str = pull_auction_str(cur)
   print(len(auction_str))
   SQL = cur.mogrify('INSERT INTO heroes (id,  maxsummons, summonsleft, generation, price, gene, mainclass, subclass, level, rarity) VALUES ')  
   SQL = SQL + auction_str
