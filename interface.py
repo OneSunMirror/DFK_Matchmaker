@@ -9,10 +9,10 @@ if __name__ == "__main__":
         app.run()
 
 
-temp_hero = get_contract(81781, rpc_add)
-gene_prob, gene_details = get_gene_prob(temp_hero)
-hero_details = get_other_hero_data(temp_hero)
-potential_match = pull_pg_auction(gene_prob, [0], hero_details)
+#temp_hero = get_contract(81781, rpc_add)
+#gene_prob, gene_details = get_gene_prob(temp_hero)
+#hero_details = get_other_hero_data(temp_hero)
+#potential_match = pull_pg_auction(gene_prob, [0], hero_details)
 #print(potential_match)
 
 @app.route('/')
@@ -25,12 +25,15 @@ def update():
     hero_1_contract = get_contract(int(hero_ID_1), rpc_add)
     gene_prob_1, gene_details_1 = get_gene_prob(hero_1_contract)
     hero_1_details = get_other_hero_data(hero_1_contract)
-    potential_match, last_update, current_time = pull_pg_auction(gene_prob_1, [0,3,4,5,6], hero_1_details)
+    DATABASE_URL = os.environ['DATABASE_URL']
+    sale_match, last_update, current_time = pull_pg_auction(gene_prob_1, DATABASE_URL, "Sale", [0,3,4,5,6], hero_1_details)
+    DATABASE_URL = os.environ['HEROKU_POSTGRESQL_YELLOW']
+    rent_match, last_update, current_time = pull_pg_auction(gene_prob_1, DATABASE_URL, "Rent", [0,3,4,5,6], hero_1_details)
     #print(potential_match)
     #print("update")
     res = {}
     res['hero1'] = gene_details_1
-    res['matches'] = potential_match
+    res['matches'] = sale_match +  rent_match
     res['last_update'] = last_update
     res['current_time'] = current_time
     #print(json.dumps(gene_1))

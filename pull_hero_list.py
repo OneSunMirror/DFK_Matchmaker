@@ -136,15 +136,15 @@ AUCTIONS_OPEN_GRAPHQL_QUERY_FAST_rent = """
                         """  
 graphql = 'https://defi-kingdoms-community-api-gateway-co06z8vi.uc.gateway.dev/graphql'
 SALE_AUCTIONS_CONTRACT_ADDRESS = '0x13a65B9F8039E2c032Bc022171Dc05B30c3f2892'
-def get_open_auctions(graphql_address, count, skip):
+def get_open_auctions(graphql_address, GRAPHQL, TYPE, count, skip):
 
-    r = requests.post(graphql_address, json={'query': AUCTIONS_OPEN_GRAPHQL_QUERY_FAST % (count, skip)})
+    r = requests.post(graphql_address, json={'query': GRAPHQL % (count, skip)})
 
     if r.status_code != 200:
         raise Exception("HTTP error " + str(r.status_code) + ": " + r.text)
     data = r.json()
     
-    return data['data']['saleAuctions']
+    return data['data'][TYPE]
 
 def get_open_rent_auctions(graphql_address, count, skip):
 
@@ -161,10 +161,10 @@ def convert_int(in_str):
   else:
     return 0
 
-def pull_auction_str(cur):
+def pull_auction_str(cur, GRAPHQL, TYPE):
   auction_dict  = {}
   for i in range(1, 10000, 1000):
-    auct_dict = get_open_auctions(graphql, 1000, i)
+    auct_dict = get_open_auctions(graphql, GRAPHQL, TYPE, 1000, i)
     print(len(auct_dict))
     #print(auct_dict)
     if(len(auct_dict) == 0):
@@ -210,8 +210,7 @@ def auctions(auction_address, index, rpc_address):
 #print(auctions(SALE_AUCTIONS_CONTRACT_ADDRESS, 1, rpc_add))
 
 
-def update_pg_auction():
-  DATABASE_URL = os.environ['DATABASE_URL']
+def update_pg_auction(DATABASE_URL, GRAPHQL, TYPE):
   print(DATABASE_URL)
   #conn = psycopg2.connect(
   #      host="localhost",
@@ -220,7 +219,7 @@ def update_pg_auction():
    #     password="asdqwe123")
   conn = psycopg2.connect(DATABASE_URL, sslmode='require')
   cur = conn.cursor()
-  auction_str = pull_auction_str(cur)
+  auction_str = pull_auction_str(cur, GRAPHQL, TYPE)
   SQL = cur.mogrify('DELETE From heroes')
   cur.execute(SQL)
   conn.commit()
@@ -238,11 +237,10 @@ def update_pg_auction():
 #update_pg_auction()
 
 
-def pull_pg_auction(hero_gene, search_space, hero_details):
+def pull_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details):
   generation = hero_details['generation']
   maxsummons = hero_details['maxsummons']
   summonsleft = maxsummons - hero_details['summons']
-  DATABASE_URL = os.environ['DATABASE_URL']
   print(DATABASE_URL)
   conn = psycopg2.connect(DATABASE_URL, sslmode='require')
   #conn = psycopg2.connect(
@@ -275,13 +273,17 @@ def pull_pg_auction(hero_gene, search_space, hero_details):
   cur.execute(SQL)
   last_update = cur.fetchall()
   conn.close()
-  
+  if TYPE == 'Sale':
+    O_TYPE = 'Rent'
+  else:
+    O_TYPE = 'Sale'
   matches = []
   #print(len(data))
   for match in data:
     #match_data = get_other_hero_data(get_contract(match[0], rpc_add))
-    attributes= ['ID', 'Class', 'Sub Class', 'Rarity', 'Generation', 'Max Summons', 'Summons Left', 'level', 'Price']
+    attributes= ['ID', 'Class', 'Sub Class', 'Rarity', 'Generation', 'Max Summons', 'Summons Left', 'level', TYPE]
     dict_attri = {attributes[i]: match[i] for i in range(0, 9)}
+    dict_attri[O_TYPE] = 'N/A'
     comb_score = 0
     tot_score = 0
     j = 0
