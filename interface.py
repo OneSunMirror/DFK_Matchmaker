@@ -27,7 +27,7 @@ def update():
     hero_1_details = get_other_hero_data(hero_1_contract)
     DATABASE_URL = os.environ['DATABASE_URL']
     sale_match, last_update, current_time = pull_pg_auction(gene_prob_1, DATABASE_URL, "Sale", [0,3,4,5,6], hero_1_details)
-    DATABASE_URL = os.environ['HEROKU_POSTGRESQL_YELLOW']
+    DATABASE_URL = os.environ['HEROKU_POSTGRESQL_YELLOW_URL']
     rent_match, last_update, current_time = pull_pg_auction(gene_prob_1, DATABASE_URL, "Rent", [0,3,4,5,6], hero_1_details)
     #print(potential_match)
     #print("update")
