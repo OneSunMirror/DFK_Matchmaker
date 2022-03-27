@@ -25,7 +25,7 @@ body {
   width: 1em;
 }
 .input_label{
-  font-size: 24px;
+  font-size: 18px;
 }
     .input {
       border: 2px solid rgba(0, 0, 0, 0.6);
@@ -139,4 +139,19 @@ body {
 /* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
   visibility: visible;
+}
+
+input[type='radio'] {
+  box-sizing: border-box;
+  appearance: none;
+  background: white;
+  outline: 0.5px solid #333;
+  border: 0.5px solid white;
+  width: 12px;
+  height: 12px;
+  
+}
+
+input[type='radio']:checked {
+  background: #333;
 }

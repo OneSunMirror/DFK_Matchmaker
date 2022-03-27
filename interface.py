@@ -21,10 +21,10 @@ def init():
 
 @app.route('/api/update', methods=['POST'])
 def update():
-    hero_ID_1 = request.form['hero_ID_1']
+    hero_ID_1 = json.loads(request.get_data())['id_1']
     hero_1_contract = get_contract(int(hero_ID_1), rpc_add)
     gene_prob_1, gene_details_1 = get_gene_prob(hero_1_contract)
-    hero_1_details = get_other_hero_data(hero_1_contract)
+    hero_1_details, desc = get_other_hero_data(hero_1_contract)
     DATABASE_URL = os.environ['DATABASE_URL']
     sale_match, last_update, current_time = pull_pg_auction(gene_prob_1, DATABASE_URL, "Sale", [0,3,4,5,6], hero_1_details)
     DATABASE_URL = os.environ['HEROKU_POSTGRESQL_YELLOW_URL']
@@ -38,6 +38,17 @@ def update():
     res['current_time'] = current_time
     #print(json.dumps(gene_1))
     print(res['hero1'])
+    return json.dumps(res)
+
+
+@app.route('/api/update_all', methods=['POST'])
+def update_all():
+    contract_add = json.loads(request.get_data())['contract_add']
+    print(contract_add)
+    res = []
+    for ids in  get_users_heroes(contract_add,rpc_add):
+        __, desc = get_other_hero_data(get_contract(ids,rpc_add))
+        res.append({'id' : ids, 'desc' :desc}) 
     return json.dumps(res)
 
 @app.route('/api/match', methods=['POST'])

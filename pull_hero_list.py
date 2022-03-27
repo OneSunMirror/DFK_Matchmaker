@@ -307,6 +307,11 @@ def pull_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details):
   return matches, last_update, current_time
 
 
+
+temp_add = "0xA5aed0dA6d7Ae07815b044702179192eAe5e3984"
+print(get_users_heroes(temp_add, rpc_add))
+
+
 #  SQL = cur.mogrify('SELECT * FROM Heroes Where gene[1][1] >= 0.75')
 #  cur.execute(SQL)
 #  data = cur.fetchall()

@@ -279,11 +279,14 @@ def get_other_hero_data(hero_contract):
     hero_details ={}
     hero_details['summonerId'] = hero_contract[1][2]
     hero_details['assistantId'] = hero_contract[1][3]
+    hero_details['primary_Class'] = _class[hero_contract[2][8]]
+    hero_details['level'] = hero_contract[3][3]
     hero_details['summons'] = hero_contract[1][4]
     hero_details['maxsummons'] = hero_contract[1][5]
     hero_details['generation'] = hero_contract[2][4]
-    hero_details['rarity'] = hero_contract[2][2]
-    return hero_details
+    hero_details['rarity'] = hero_rarity[hero_contract[2][2]]
+    Desc = hero_details['rarity'] + " " + hero_details['primary_Class'] + ", Gen " + str(hero_details['generation']) + ", Level " + str(hero_details['level']) + ", " + str(hero_details['maxsummons'] - hero_details['summons']) + "/" + str(hero_details['maxsummons']) + " Summons"
+    return hero_details, Desc
 
 
 def calc_prob(raw_genes):
@@ -345,7 +348,13 @@ def calc_likelyhood(gene1, gene2):
     dict_result.append([{'name' : x, 'chance' : y}for x,y in sorted(prof.items(), key=lambda item: item[1], reverse=True) if y!=0.0])
     #Sprint(dict_result)
     return  dict_result
+def get_users_heroes(user_address, rpc_address):
+    w3 = Web3(Web3.HTTPProvider(rpc_address))
 
+    contract_address = Web3.toChecksumAddress(HERO_CONTRACT)
+    contract = w3.eth.contract(contract_address, abi=ABI)
+
+    return contract.functions.getUserHeroes(Web3.toChecksumAddress(user_address)).call()
 
 #print(calc_likelyhood(get_gene_prob(get_contract(12, rpc_add)),get_gene_prob(get_contract(13, rpc_add))))
 
