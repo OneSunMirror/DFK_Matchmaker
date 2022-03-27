@@ -95,7 +95,7 @@
 </div>
 </div>
 <p></p>
-<button type="button" id="matches_button" class="collapsible" text-align="cent"><a data-toggle="tooltip" title="Based on data periodically pulled from Sales Auction House (Rent auction, to be implemented) ">&#x1F6C8;</a>Potential Matches</button>
+<button type="button" id="match_button" class="collapsible" text-align="cent"><a data-toggle="tooltip" title="Based on data periodically pulled from Sales Auction House (Rent auction, to be implemented) ">&#x1F6C8;</a>Potential Matches</button>
 <div class="content" style="overflow-x:auto;"><br>
   <p>To Calculate Match Probabilities, Click on any row in the table below </p>
   <p id="time"> </p>
@@ -156,7 +156,7 @@ function populate_matches(id_1, matches) {
 function scrollto(element) {
   $([document.documentElement, document.body]).animate({
         scrollTop: $(element).offset().top
-    }, 2000);
+    }, 1000);
 }
 function toggleCollapse(coll, i) {
     var content = coll.nextElementSibling;
@@ -280,7 +280,7 @@ for (i = 0; i < coll.length; i++) {
          'dataType' : 'json',
          'data': JSON.stringify({'id_1' : id_1}), 
          'success': function(res) {
-            scrollto("#genetic_button")
+            scrollto("#match_button")
             populate_matches(id_1, res)    
           }, 
          'error': function(error) {  
@@ -363,7 +363,7 @@ for (i = 0; i < coll.length; i++) {
          'dataType' : 'json',
          'data': JSON.stringify({'id_1' : id_1}), 
          'success': function(res) {
-            scrollto("#genetic_button")   
+            scrollto("#match_button")   
             populate_matches(id_1, res)   
           }, 
          'error': function(error) {  
@@ -382,6 +382,7 @@ for (i = 0; i < coll.length; i++) {
           data: JSON.stringify({'id_2' : row_data.ID, 'id_1' : id_1}),
           'dataType': 'json',
           success: function(response){ 
+            scrollto("#genetic_button")
             for (attri in attris) {
               $('#' + attris[attri]).DataTable().clear().rows.add(response.summon[attri]).draw();
             }
