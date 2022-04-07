@@ -22,13 +22,14 @@ def init():
 @app.route('/api/update', methods=['POST'])
 def update():
     hero_ID_1 = json.loads(request.get_data())['id_1']
+    options = json.loads(json.loads(request.get_data())['options'])
     hero_1_contract = get_contract(int(hero_ID_1), rpc_add)
     gene_prob_1, gene_details_1 = get_gene_prob(hero_1_contract)
     hero_1_details, desc = get_other_hero_data(hero_1_contract)
     DATABASE_URL = os.environ['DATABASE_URL']
-    sale_match, last_update, current_time = pull_pg_auction(gene_prob_1, DATABASE_URL, "Sale", [0,3,4,5,6], hero_1_details)
+    sale_match, last_update, current_time = pull_pg_auction(gene_prob_1, DATABASE_URL, "Sale", [0,3,4,5,6], hero_1_details, options)
     DATABASE_URL = os.environ['HEROKU_POSTGRESQL_YELLOW_URL']
-    rent_match, last_update, current_time = pull_pg_auction(gene_prob_1, DATABASE_URL, "Rent", [0,3,4,5,6], hero_1_details)
+    rent_match, last_update, current_time = pull_pg_auction(gene_prob_1, DATABASE_URL, "Rent", [0,3,4,5,6], hero_1_details, options)
     #print(potential_match)
     #print("update")
     res = {}

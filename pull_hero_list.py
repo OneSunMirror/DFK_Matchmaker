@@ -237,7 +237,7 @@ def update_pg_auction(DATABASE_URL, GRAPHQL, TYPE):
 #update_pg_auction()
 
 
-def pull_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details):
+def pull_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, options):
   generation = hero_details['generation']
   maxsummons = hero_details['maxsummons']
   summonsleft = maxsummons - hero_details['summons']
@@ -263,7 +263,14 @@ def pull_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details):
         if hero_gene[i][j] >= 0.75:
           SQL = SQL + cur.mogrify('gene[%s][%s] >= 0.75', (i+1, complement_gene[j]+1)) + b' OR '
   SQL = SQL[:len(SQL)-3]
-  SQL = SQL + cur.mogrify(') AND generation = %s AND maxsummons >= %s AND summonsleft >= %s', (generation, maxsummons, summonsleft ))
+  opt = cur.mogrify(") ")
+  if options['bool_gen']:
+    opt = opt + cur.mogrify('AND generation = %s ', (str(generation)))
+  if options['bool_summons']:
+    opt = opt + cur.mogrify('AND maxsummons >= %s AND summonsleft >= %s' , (maxsummons, summonsleft))
+  #SQL = SQL + cur.mogrify(') AND generation = %s AND maxsummons >= %s AND summonsleft >= %s', (generation, maxsummons, summonsleft ))
+  print(opt)
+  SQL = SQL + opt
   cur.execute(SQL)
   data = cur.fetchall()
   #print(data)

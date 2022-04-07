@@ -14,12 +14,12 @@
 <body style="background-color:rgba(170, 173, 115, 0.199)">
 <h1><img class="scale" src="{{url_for('static', filename='heart.png')}}" /> Defi Kingdoms Matchmaker <img class="scale" src="{{url_for('static', filename='heart.png')}}" /></h1>
 <p></p>
-<p>Now with Wallet interface (pulls all heroes in a wallet)</p>
+<p>Minor update, now with option to expand search where number of summons and generation does not need to match</p>
 <p>Tips <a data-toggle="tooltip" title="If this proves to be useful for enough people, tips will go towards upgrade heroku servers and future functionality upgrades">&#x1F6C8;</a> are greatly appreciated @ 0xA5aed0dA6d7Ae07815b044702179192eAe5e3984  <i id='copy_tip' class="fa fa-copy" style="cursor:pointer"></i></p>
 <p><a href="https://twitter.com/DfkMatchmaker?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @DfkMatchmaker</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
 
 <button type="button" class="collapsible" text-align="cent"><a data-toggle="tooltip" title="Search against Auction Houses">&#x1F6C8;</a> Search Auction House(s)</button>
-<div class="content"><br>
+<div class="content"><br> 
 
 <label class="input_label" for="hero_ID_1"><a data-toggle="tooltip" title="Enter hero ID you wish to find matches for">&#x1F6C8;</a> Hero ID #1:<img class="scale2" src="{{url_for('static', filename='heart_left.png')}}" /></label>
 <input type="text" id="hero_ID_1" name="hero_ID_1" value="">
@@ -29,8 +29,29 @@
 <input type="text" size="50" id="contract_add" name="contract_add" value="">
 <fieldset id="hero_list" align="left" display:"flex" margin-left:10px float:"left" > 
 </fieldset>
+<p></p><p></p>
+<div class="sliderWrapper">
+<div>search for same Generation No. only</div>
+<label class="switch">
+  <input id="bool_gen" type="checkbox" checked>
+  <span class="slider">
+  </span> 
+</label>
+</div>
+
+<div class="sliderWrapper">
+  <div>search for same no. of Summons remaining only</div>
+  <label class="switch">
+    <input id="bool_summons" type="checkbox" checked>
+    <span class="slider">
+    </span> 
+  </label>
+  </div>
+
 </div>
 <p></p>
+
+
 <button type="button" class="collapsible" text-align="cent"><a data-toggle="tooltip" title="Manually enter ID of the second hero rather than searching the Auction House">&#x1F6C8;</a> Manual Match</button>
 <div class="content"><br>
   <div class="row">
@@ -157,6 +178,13 @@ function scrollto(element) {
         scrollTop: $(element).offset().top
     }, 1000);
 }
+
+function get_options(){
+  return JSON.stringify({
+    'bool_gen' : document.getElementById("bool_gen").checked,
+    'bool_summons' : document.getElementById("bool_summons").checked
+  })
+}
 function toggleCollapse(coll, i) {
     var content = coll.nextElementSibling;
     if (i == 0) {
@@ -270,14 +298,14 @@ for (i = 0; i < coll.length; i++) {
     });
   };
   });
-  $("#hero_list").on("change","input",function(){
+  $("#hero_list").on("click","input",function(){
     id_1 = this.value
     $.ajax({
          'type': 'POST',
          'async': true,
          'url': '/api/update',
          'dataType' : 'json',
-         'data': JSON.stringify({'id_1' : id_1}), 
+         'data': JSON.stringify({'id_1' : id_1, 'options' : get_options()}), 
          'success': function(res) {
             scrollto("#match_button")
             populate_matches(id_1, res)    
@@ -360,7 +388,7 @@ for (i = 0; i < coll.length; i++) {
          'async': false,
          'url': '/api/update',
          'dataType' : 'json',
-         'data': JSON.stringify({'id_1' : id_1}), 
+         'data': JSON.stringify({'id_1' : id_1,'options' : get_options()}), 
          'success': function(res) {
             scrollto("#match_button")   
             populate_matches(id_1, res)   
