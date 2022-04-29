@@ -1,3 +1,4 @@
+from asyncio.format_helpers import _format_callback_source
 from web3 import Web3  
 import numpy as np
 ABI = ABI = """
@@ -164,17 +165,17 @@ hero_rarity = {
 }
 
 stats = {
-    0: 'strength',
-    2: 'agility',
-    4: 'intelligence',
-    6: 'wisdom',
-    8: 'luck',
-    10: 'vitality',
-    12: 'endurance',
-    14: 'dexterity'
+    0: 'Strength',
+    2: 'Agility',
+    4: 'Intelligence',
+    6: 'Wisdom',
+    8: 'Luck',
+    10: 'Vitality',
+    12: 'Endurance',
+    14: 'Dexterity'
 }
 
-scope_of_genes = [0,1,2,3,4,5,6] 
+scope_of_genes = [0,1,2,3,4,5,6,7,8] 
 'eventually this can be expanded to cover all genes'
 
 muteable_genes = [0,1,3,4,5,6]
@@ -287,7 +288,16 @@ def get_other_hero_data(hero_contract):
     hero_details['rarity'] = hero_rarity[hero_contract[2][2]]
     Desc = hero_details['rarity'] + " " + hero_details['primary_Class'] + ", Gen " + str(hero_details['generation']) + ", Level " + str(hero_details['level']) + ", " + str(hero_details['maxsummons'] - hero_details['summons']) + "/" + str(hero_details['maxsummons']) + " Summons"
     return hero_details, Desc
-
+def check_same_parents(a1, a2, a3, b1, b2, b3):
+    txt_1 = ["Hero 1", "Hero 1's Parent 1", "Hero 1 Parent 2"]
+    txt_2 = ["Hero 2", "Hero 2's Parent 1", "Hero 2 Parent 2"]
+    h1 =[a1, a2, a3]
+    h2 =[b1, b2, b3]
+    for i in range(3):
+        for j in range(3):
+            if h1[i] == h2[j]:
+                return False, txt_1[i] + " and " + str(txt_2[j]) + " are the same (" + str(h1[i]) + ")"
+    return True, ""
 
 def calc_prob(raw_genes):
     p_genes = np.zeros([11,32])
@@ -329,7 +339,9 @@ def calc_likelyhood(gene1, gene2):
     pass2 ={}
     act1 ={}
     act2 ={}
-    prof = {}   
+    prof = {} 
+    stat1 = {}
+    stat2 = {}  
     for j in complement_gene:
         prim[_class[j]] = round(new_genes[0,j]*100,2) 
         sub[_class[j]] = round(new_genes[1,j]*100,2) 
@@ -339,6 +351,9 @@ def calc_likelyhood(gene1, gene2):
         act2[_ability_gene[j]] = round(new_genes[6,j]*100,2)
     for j in professions:
         prof[professions[j]] = round(new_genes[2,j]*100,2)
+    for j in stats:
+        stat1[stats[j]] = round(new_genes[7,j]*100,2)
+        stat2[stats[j]] = round(new_genes[8,j]*100,2)
     dict_result.append([{'name' : x, 'chance' : y} for x,y in sorted(prim.items(), key=lambda item: item[1], reverse=True) if y!=0.0])
     dict_result.append([{'name' : x, 'chance' : y} for x,y in sorted(sub.items(), key=lambda item: item[1], reverse=True) if y!=0.0])
     dict_result.append([{'name' : x, 'chance' : y}for x,y in sorted(pass1.items(), key=lambda item: item[1], reverse=True) if y!=0.0])
@@ -346,7 +361,9 @@ def calc_likelyhood(gene1, gene2):
     dict_result.append([{'name' : x, 'chance' : y} for x,y in sorted(act1.items(), key=lambda item: item[1], reverse=True) if y!=0.0])
     dict_result.append([{'name' : x, 'chance' : y} for x,y in sorted(act2.items(), key=lambda item: item[1], reverse=True) if y!=0.0])
     dict_result.append([{'name' : x, 'chance' : y}for x,y in sorted(prof.items(), key=lambda item: item[1], reverse=True) if y!=0.0])
-    #Sprint(dict_result)
+    dict_result.append([{'name' : x, 'chance' : y}for x,y in sorted(stat1.items(), key=lambda item: item[1], reverse=True) if y!=0.0])
+    dict_result.append([{'name' : x, 'chance' : y}for x,y in sorted(stat2.items(), key=lambda item: item[1], reverse=True) if y!=0.0])
+    #print(dict_result)
     return  dict_result
 def get_users_heroes(user_address, rpc_address):
     w3 = Web3(Web3.HTTPProvider(rpc_address))

@@ -56,9 +56,13 @@ def update_all():
 def data():
     #hero_ID_2 = json.load(request.get_data('data'))
     hero_IDs = json.loads(request.get_data())  
-    hero_2_contract = get_contract(int(hero_IDs['id_2']), rpc_add)
+    id1 = int(hero_IDs['id_1'])
+    id2 = int(hero_IDs['id_2'])
+    hero_2_contract = get_contract(id2, rpc_add)
     gene_prob_2, gene_details_2 = get_gene_prob(hero_2_contract)
-    hero_1_contract = get_contract(int(hero_IDs['id_1']), rpc_add)
+    hero2_details, __ = get_other_hero_data(hero_2_contract)
+    hero_1_contract = get_contract(id1, rpc_add)
+    hero1_details, __ = get_other_hero_data(hero_1_contract)
     gene_prob_1, gene_details_1 = get_gene_prob(hero_1_contract)
     summon_result = calc_likelyhood(gene_prob_1, gene_prob_2)
     #print(summon_result)
@@ -69,4 +73,5 @@ def data():
     res['hero2'] = gene_details_2
     res['hero1'] = gene_details_1
     res['summon'] = summon_result
+    res['valid'], res['valid_txt'] = check_same_parents(id1, hero1_details['summonerId'], hero1_details['assistantId'], id2, hero2_details['summonerId'], hero2_details['assistantId'])
     return json.dumps(res)

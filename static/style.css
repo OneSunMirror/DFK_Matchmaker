@@ -47,7 +47,7 @@ body {
     }    
     .column_2 {
       float: left;
-      flex: 13.5%;
+      flex: 20%;
       padding: 5px;
     }
     .column_1 {
