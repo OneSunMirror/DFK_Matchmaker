@@ -288,6 +288,7 @@ def get_other_hero_data(hero_contract):
     hero_details['rarity'] = hero_rarity[hero_contract[2][2]]
     Desc = hero_details['rarity'] + " " + hero_details['primary_Class'] + ", Gen " + str(hero_details['generation']) + ", Level " + str(hero_details['level']) + ", " + str(hero_details['maxsummons'] - hero_details['summons']) + "/" + str(hero_details['maxsummons']) + " Summons"
     return hero_details, Desc
+    
 def check_same_parents(a1, a2, a3, b1, b2, b3):
     txt_1 = ["Hero 1", "Hero 1's Parent 1", "Hero 1 Parent 2"]
     txt_2 = ["Hero 2", "Hero 2's Parent 1", "Hero 2 Parent 2"]
@@ -295,7 +296,7 @@ def check_same_parents(a1, a2, a3, b1, b2, b3):
     h2 =[b1, b2, b3]
     for i in range(3):
         for j in range(3):
-            if h1[i] == h2[j]:
+            if (h1[i] == h2[j]) and (h1[i] != 0):
                 return False, txt_1[i] + " and " + str(txt_2[j]) + " are the same (" + str(h1[i]) + ")"
     return True, ""
 

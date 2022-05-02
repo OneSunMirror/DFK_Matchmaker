@@ -182,6 +182,7 @@ def pull_auction_str(cur, GRAPHQL, TYPE):
         subClass = auction['tokenId']['subClass']
         level = int(auction['tokenId']['level'])
         price = float(auction['startingPrice']) / 1000000000000000000
+        print = int(price)
         #match_data = get_other_hero_data(get_contract(int(hero_id), rpc_add))
         auction_dict[hero_id] = [hero_id,  max_Summons, summons_left, generation, price, gene_prob.tolist(), mainClass, subClass, level, c_rarity]
     print(len(auction_dict))
