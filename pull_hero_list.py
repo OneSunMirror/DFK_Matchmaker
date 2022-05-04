@@ -1,3 +1,4 @@
+from numpy import NAN
 from get_hero_data import *
 import requests
 import psycopg2

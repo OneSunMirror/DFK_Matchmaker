@@ -164,6 +164,13 @@ hero_rarity = {
     4: "Mythic",
 }
 
+rarity_prob = [[58.3, 27, 12.5, 2.0, 0.2],
+[53.7, 28.4, 13.8, 3.1, 1.0], 
+[49.2, 29.8, 15, 4.3, 1.9], 
+[44.6, 31.1, 16.3, 5.4, 2.7],[40, 32.5, 17.5, 6.5, 3.5]
+]
+    
+
 stats = {
     0: 'Strength',
     2: 'Agility',
@@ -286,6 +293,7 @@ def get_other_hero_data(hero_contract):
     hero_details['maxsummons'] = hero_contract[1][5]
     hero_details['generation'] = hero_contract[2][4]
     hero_details['rarity'] = hero_rarity[hero_contract[2][2]]
+    hero_details['rarity_num'] = hero_contract[2][2]
     Desc = hero_details['rarity'] + " " + hero_details['primary_Class'] + ", Gen " + str(hero_details['generation']) + ", Level " + str(hero_details['level']) + ", " + str(hero_details['maxsummons'] - hero_details['summons']) + "/" + str(hero_details['maxsummons']) + " Summons"
     return hero_details, Desc
     
@@ -299,7 +307,15 @@ def check_same_parents(a1, a2, a3, b1, b2, b3):
             if (h1[i] == h2[j]) and (h1[i] != 0):
                 return False, txt_1[i] + " and " + str(txt_2[j]) + " are the same (" + str(h1[i]) + ")"
     return True, ""
-
+def calc_rarity(r1, r2):
+    prob = []
+    for i in range(5):
+        dict = {
+            'name' : hero_rarity[i],
+            'chance' : (rarity_prob[r1][i] + rarity_prob[r2][i])/2       
+        }
+        prob.append(dict)
+    return prob
 def calc_prob(raw_genes):
     p_genes = np.zeros([11,32])
     swap_p = [0.75, 0.1875, 0.046875, 0.015625]
@@ -355,6 +371,7 @@ def calc_likelyhood(gene1, gene2):
     for j in stats:
         stat1[stats[j]] = round(new_genes[7,j]*100,2)
         stat2[stats[j]] = round(new_genes[8,j]*100,2)
+
     dict_result.append([{'name' : x, 'chance' : y} for x,y in sorted(prim.items(), key=lambda item: item[1], reverse=True) if y!=0.0])
     dict_result.append([{'name' : x, 'chance' : y} for x,y in sorted(sub.items(), key=lambda item: item[1], reverse=True) if y!=0.0])
     dict_result.append([{'name' : x, 'chance' : y}for x,y in sorted(pass1.items(), key=lambda item: item[1], reverse=True) if y!=0.0])
@@ -366,6 +383,7 @@ def calc_likelyhood(gene1, gene2):
     dict_result.append([{'name' : x, 'chance' : y}for x,y in sorted(stat2.items(), key=lambda item: item[1], reverse=True) if y!=0.0])
     #print(dict_result)
     return  dict_result
+
 def get_users_heroes(user_address, rpc_address):
     w3 = Web3(Web3.HTTPProvider(rpc_address))
 

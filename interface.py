@@ -60,11 +60,14 @@ def data():
     id2 = int(hero_IDs['id_2'])
     hero_2_contract = get_contract(id2, rpc_add)
     gene_prob_2, gene_details_2 = get_gene_prob(hero_2_contract)
-    hero2_details, __ = get_other_hero_data(hero_2_contract)
+    hero2_details, hero2_text = get_other_hero_data(hero_2_contract)
     hero_1_contract = get_contract(id1, rpc_add)
-    hero1_details, __ = get_other_hero_data(hero_1_contract)
+    hero1_details, hero1_text = get_other_hero_data(hero_1_contract)
     gene_prob_1, gene_details_1 = get_gene_prob(hero_1_contract)
     summon_result = calc_likelyhood(gene_prob_1, gene_prob_2)
+    rarity = calc_rarity(hero1_details['rarity_num'], hero2_details['rarity_num'])
+    summon_result.append(rarity)
+    print(summon_result)
     #print(summon_result)
     #id = request.form['hero_ID_1']
     #id = request.get_data('find_id')
@@ -72,6 +75,8 @@ def data():
     res = {}
     res['hero2'] = gene_details_2
     res['hero1'] = gene_details_1
+    res['hero1_t'] = hero1_text
+    res['hero2_t'] = hero2_text
     res['summon'] = summon_result
     res['valid'], res['valid_txt'] = check_same_parents(id1, hero1_details['summonerId'], hero1_details['assistantId'], id2, hero2_details['summonerId'], hero2_details['assistantId'])
     return json.dumps(res)

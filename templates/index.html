@@ -14,9 +14,9 @@
 <body style="background-color:rgba(170, 173, 115, 0.199)">
 <h1><img class="scale" src="{{url_for('static', filename='heart.png')}}" /> Defi Kingdoms Matchmaker <img class="scale" src="{{url_for('static', filename='heart.png')}}" /></h1>
 <p></p>
-<p>Update 29 Apr 22, now includes: </p>
-<p> -- genetic data and match for Stat Boosts </p>
-<p> -- when matching, checks is made on valid matches and return error if heroes share same parent(s) or is parent of another</p>
+<p>Update 04 May 22, now includes: </p>
+<p> -- fixed sorting by prices bug</p>
+<p> -- added Rarity chances and match tab also details the parent's description </p>
 <p>Tips <a data-toggle="tooltip" title="If this proves to be useful for enough people, tips will go towards upgrade heroku servers and future functionality upgrades">&#x1F6C8;</a> are greatly appreciated @ 0xA5aed0dA6d7Ae07815b044702179192eAe5e3984  <i id='copy_tip' class="fa fa-copy" style="cursor:pointer"></i></p>
 <p><a href="https://twitter.com/DfkMatchmaker?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @DfkMatchmaker</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
 
@@ -111,8 +111,9 @@
 <button type="button" class="collapsible" text-align="cent"><a data-toggle="tooltip" title="See Notes section on algorithm source">&#x1F6C8;</a>Summoning Probabilities</button>
 <div class="content"><br>
 <h3><img class="scale" src="{{url_for('static', filename='heart.png')}}" /></h3>
+<p><text id="hero1_det"></text></p>
+<p><text id="hero2_det"></text></p>
 <div id = "summon_div", class="row">
-
 </div>
 </div>
 </div>
@@ -151,6 +152,7 @@
 <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
+<script src="{{url_for('static', filename='novalue.js')}}"></script>
 <script>
   var id_1
   var attris = new Array()
@@ -163,9 +165,11 @@
   attris[6] = "Profession"
   attris[7] = "StatBoost1"
   attris[8] = "StatBoost2"
+  attris[9] = "Rarity"
 
 var coll = document.getElementsByClassName("collapsible");
 var i;
+
 
 function populate_matches(id_1, matches) {
   $('#hero1_data').DataTable().clear().rows.add(matches.hero1).draw();
@@ -180,7 +184,7 @@ function populate_matches(id_1, matches) {
 function scrollto(element) {
   $([document.documentElement, document.body]).animate({
         scrollTop: $(element).offset().top
-    }, 1000);
+    }, 200);
 }
 
 function get_options(){
@@ -260,7 +264,10 @@ for (i = 0; i < coll.length; i++) {
         {data: "Generation"},
         {data: 'Sale'},
         {data: 'Rent'}
-      ]
+      ],
+      columnDefs: [
+        { type: 'sethigh', targets : [1, 9, 10]}
+     ],
     });
     $('#hero1_data').DataTable({ 
       data : empty_matches,
@@ -424,6 +431,8 @@ for (i = 0; i < coll.length; i++) {
             }
             $('#hero2_data').DataTable().clear().rows.add(response.hero2).draw();
             document.getElementById("hero2_text").innerHTML = "Hero Data for: " + row_data.ID
+            document.getElementById("hero1_det").innerHTML = "Parent 1: " + response.hero1_t
+            document.getElementById("hero2_det").innerHTML = "Parent 2: " + response.hero2_t
             toggleCollapse(coll[3], 1);
             toggleCollapse(coll[2], 1)
           } else{
