@@ -78,12 +78,15 @@ _class = {
     5: "Wizard",
     6: "Monk",
     7: "Pirate",
+    8: "Berserker or Seer",
+    9: "Berserker or Seer",
     16: "Paladin",
     17: "DarkKnight",
     18: "Summoner",
     19: "Ninja",
     24: "Dragoon",
     25: "Sage",
+    20: "Shapeshifter",
     28: "DreadKnight"
 }
 
@@ -114,10 +117,13 @@ upgrade_gene = {
     5: 18,
     6: 19,
     7: 19,
+    8: 20,
+    9: 20,
     16: 24,
     17: 24,
     18: 25,
     19: 25,
+    20: 20,
     24: 28,
     25: 28,
     28: 28
@@ -264,7 +270,8 @@ def get_contract(hero_id, rpc_address):
         w3 = Web3(Web3.HTTPProvider(rpc_address))   
         contract_address = Web3.toChecksumAddress(HERO_CONTRACT)
         contract = w3.eth.contract(contract_address, abi=ABI)
-        hero_contract = contract.functions.getHero(hero_id).call()          
+        hero_contract = contract.functions.getHero(hero_id).call() 
+                 
         return hero_contract
     except Exception as inst:
         return None
@@ -273,7 +280,7 @@ def get_contract(hero_id, rpc_address):
 def get_ability_gene(group):
     return [_ability_gene.get(group[5]), _ability_gene.get(group[6]),_ability_gene.get(group[3]),_ability_gene.get(group[4])]
 
-#contract = get_contract(124693,rpc_add) 
+#contract = get_contract(12469,rpc_add) 
 #genes = contract[2][0]
 
 'gene_prob array of probabilities to be dominate before mutation for all possible traits:'  
@@ -320,6 +327,7 @@ def calc_prob(raw_genes):
     p_genes = np.zeros([11,32])
     swap_p = [0.75, 0.1875, 0.046875, 0.015625]
     genes = genes2traits(raw_genes)
+    #print(genes)
     dict_gene_all = []
     dict_gene = {}
     for i in range(11):

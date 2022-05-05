@@ -162,6 +162,16 @@ def convert_int(in_str):
   else:
     return 0
 
+def manual_auction_pull(TYPE, index, rpc_address):
+    if TYPE == "'saleAuctions'":
+      auction_address = SALE_AUCTIONS_CONTRACT_ADDRESS
+    else:
+      auction_address = SALE_AUCTIONS_CONTRACT_ADDRESS
+    w3 = Web3(Web3.HTTPProvider(rpc_address))
+    auction_contract_address = Web3.toChecksumAddress(auction_address)
+    auction_contract = w3.eth.contract(auction_contract_address, abi=ABI)
+    return auction_contract.functions.auctions(int(index)).call()
+
 def pull_auction_str(cur, GRAPHQL, TYPE):
   auction_dict  = {}
   for i in range(1, 10000, 1000):
@@ -171,21 +181,28 @@ def pull_auction_str(cur, GRAPHQL, TYPE):
     if(len(auct_dict) == 0):
       break
     for auction in auct_dict:
-      max_Summons = int(auction['tokenId']['maxSummons'])
-      summons_left = max_Summons - int(auction['tokenId']['summons'])
-      if (summons_left != 0):
-        hero_id = auction['tokenId']['id']
+      #print(auction)
+      if auction['tokenId'] == None:
+        print(auction['id'])
+      else: 
+        max_Summons = int(auction['tokenId']['maxSummons']) 
+        summons_left = max_Summons - int(auction['tokenId']['summons'])
+        if (summons_left != 0):
+          hero_id = auction['tokenId']['id']
+          if (int(hero_id) >= 1000000000000):
+            hero_id = str(-1 * (int(hero_id) - 1000000000000))
+            print(hero_id)
         #print(auction['tokenId'])
-        gene_prob, __ = calc_prob(convert_int(auction['tokenId']['statGenes']))
-        generation = convert_int(auction['tokenId']['generation'])
-        c_rarity = rarity[int(auction['tokenId']['rarity'])]
-        mainClass = auction['tokenId']['mainClass']
-        subClass = auction['tokenId']['subClass']
-        level = int(auction['tokenId']['level'])
-        price = float(auction['startingPrice']) / 1000000000000000000
-        price = int(price)
-        #match_data = get_other_hero_data(get_contract(int(hero_id), rpc_add))
-        auction_dict[hero_id] = [hero_id,  max_Summons, summons_left, generation, price, gene_prob.tolist(), mainClass, subClass, level, c_rarity]
+          gene_prob, __ = calc_prob(convert_int(auction['tokenId']['statGenes']))
+          generation = convert_int(auction['tokenId']['generation'])
+          c_rarity = rarity[int(auction['tokenId']['rarity'])]
+          mainClass = auction['tokenId']['mainClass']
+          subClass = auction['tokenId']['subClass']
+          level = int(auction['tokenId']['level'])
+          price = float(auction['startingPrice']) / 1000000000000000000
+          price = int(price)
+          #match_data = get_other_hero_data(get_contract(int(hero_id), rpc_add))
+          auction_dict[hero_id] = [hero_id,  max_Summons, summons_left, generation, price, gene_prob.tolist(), mainClass, subClass, level, c_rarity]
     print(len(auction_dict))
   
   
@@ -236,7 +253,6 @@ def update_pg_auction(DATABASE_URL, GRAPHQL, TYPE):
   conn.commit()
   conn.close()
   return None
-#update_pg_auction()
 
 
 def pull_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, options):
@@ -292,6 +308,11 @@ def pull_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, o
     #match_data = get_other_hero_data(get_contract(match[0], rpc_add))
     attributes= ['ID', 'Class', 'Sub Class', 'Rarity', 'Generation', 'Max Summons', 'Summons Left', 'level', TYPE]
     dict_attri = {attributes[i]: match[i] for i in range(0, 9)}
+    if dict_attri['ID'] < 0:
+      dict_attri['ID'] = -1 * dict_attri['ID']
+      dict_attri['Zone'] = 'CV'
+    else:
+      dict_attri['Zone'] = 'SD'
     dict_attri[O_TYPE] = 'N/A'
     comb_score = 0
     tot_score = 0
@@ -318,7 +339,9 @@ def pull_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, o
 
 
 temp_add = "0xA5aed0dA6d7Ae07815b044702179192eAe5e3984"
-print(get_users_heroes(temp_add, rpc_add))
+#print(get_users_heroes(temp_add, rpc_add))
+#update_pg_auction('postgres://vefofuiocxcndo:45f6fc2db6c7858a26c57daf1a3667cf33c98fbd4f4e95c74a41560fc98ace42@ec2-34-199-200-115.compute-1.amazonaws.com:5432/d8r59mr19penn2'
+#, AUCTIONS_OPEN_GRAPHQL_QUERY_FAST, 'saleAuctions')
 
 
 #  SQL = cur.mogrify('SELECT * FROM Heroes Where gene[1][1] >= 0.75')
