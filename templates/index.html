@@ -422,7 +422,7 @@ for (i = 0; i < coll.length; i++) {
         $.ajax({ 
           url: '/api/match', 
           type: 'POST', 
-          data: JSON.stringify({'id_2' : row_data.ID, 'id_1' : id_1}),
+          data: JSON.stringify({'id_2' : row_data.ID, 'id_2_Zone' : row_data.Zone, 'id_1' : id_1}),
           'dataType': 'json',
           success: function(response){ 
             if (response.valid){ 

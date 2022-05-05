@@ -58,6 +58,10 @@ def data():
     hero_IDs = json.loads(request.get_data())  
     id1 = int(hero_IDs['id_1'])
     id2 = int(hero_IDs['id_2'])
+    id2_Zone = hero_IDs['id_2_Zone']
+    if id2_Zone == 'CV':
+        id2 = id2 + 1000000000000
+    print(id2)
     hero_2_contract = get_contract(id2, rpc_add)
     gene_prob_2, gene_details_2 = get_gene_prob(hero_2_contract)
     hero2_details, hero2_text = get_other_hero_data(hero_2_contract)
