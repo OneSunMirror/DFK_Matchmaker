@@ -21,9 +21,11 @@ def init():
 
 @app.route('/api/update', methods=['POST'])
 def update():
-    hero_ID_1 = json.loads(request.get_data())['id_1']
+    hero_ID_1 = int(json.loads(request.get_data())['id_1'])
     options = json.loads(json.loads(request.get_data())['options'])
-    hero_1_contract = get_contract(int(hero_ID_1), rpc_add)
+    if options['bool_zone'] == False:
+        hero_ID_1 = hero_ID_1 +  1000000000000
+    hero_1_contract = get_contract(hero_ID_1, rpc_add)
     gene_prob_1, gene_details_1 = get_gene_prob(hero_1_contract)
     hero_1_details, desc = get_other_hero_data(hero_1_contract)
     DATABASE_URL = os.environ['DATABASE_URL']

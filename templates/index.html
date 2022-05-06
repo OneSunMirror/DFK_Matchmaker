@@ -16,15 +16,25 @@
 <p></p>
 <p>Update 05 May 22, now includes: </p>
 <p> -- fixed issue introduced by CV hero launch</p>
+<p> -- add toggle to search CV heroes</p>
 <p>Tips <a data-toggle="tooltip" title="If this proves to be useful for enough people, tips will go towards upgrade heroku servers and future functionality upgrades">&#x1F6C8;</a> are greatly appreciated @ 0xA5aed0dA6d7Ae07815b044702179192eAe5e3984  <i id='copy_tip' class="fa fa-copy" style="cursor:pointer"></i></p>
 <p><a href="https://twitter.com/DfkMatchmaker?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @DfkMatchmaker</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
 
 <button type="button" class="collapsible" text-align="cent"><a data-toggle="tooltip" title="Search against Auction Houses">&#x1F6C8;</a> Search Auction House(s)</button>
-<div class="content"><br> 
-
+<div class="content"><br>
 <label class="input_label" for="hero_ID_1"><a data-toggle="tooltip" title="Enter hero ID you wish to find matches for">&#x1F6C8;</a> Hero ID #1:<img class="scale2" src="{{url_for('static', filename='heart_left.png')}}" /></label>
 <input type="text" id="hero_ID_1" name="hero_ID_1" value="">
 <input id="matches" value="Find Matches" type="button" class="pixel"/>
+
+<div class="sliderWrapper">
+<div>Crystalvale Hero</div>   
+<label class="switch">
+    <input id="bool_zone" type="checkbox" checked>
+    <span class="slider">
+    </span> 
+</label>
+<div>Serendale Hero</div>
+</div>
 <p></p><p font-size="24px">or</p>
 <label class="input_label" for="contract_add"><a data-toggle="tooltip" title="Enter your contract address">&#x1F6C8;</a> Wallet Address (0x...):<img class="scale2" src="{{url_for('static', filename='heart_left.png')}}" /></label>
 <input type="text" size="50" id="contract_add" name="contract_add" value="">
@@ -190,7 +200,8 @@ function scrollto(element) {
 function get_options(){
   return JSON.stringify({
     'bool_gen' : document.getElementById("bool_gen").checked,
-    'bool_summons' : document.getElementById("bool_summons").checked
+    'bool_summons' : document.getElementById("bool_summons").checked,
+    'bool_zone' : document.getElementById("bool_zone").checked
   })
 }
 function toggleCollapse(coll, i) {
@@ -250,7 +261,7 @@ for (i = 0; i < coll.length; i++) {
       data : empty_matches, searching : false, info : false,
       retrive : true,
       responsive : true,
-      "aaSorting": [1, "desc"],
+      "aaSorting": [2, "desc"],
       "pageLength" : 50,
       columns: [
         {data: "ID"},
@@ -267,7 +278,7 @@ for (i = 0; i < coll.length; i++) {
         {data: 'Rent'}
       ],
       columnDefs: [
-        { type: 'sethigh', targets : [1, 10, 11]}
+        { type: 'sethigh', targets : [2, 10, 11]}
      ],
     });
     $('#hero1_data').DataTable({ 
