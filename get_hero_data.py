@@ -305,8 +305,8 @@ HERO_QUERY = """
 query {
   hero(id: %d) {
     statGenes
-    assistantId {id}
-    summonerId {id}
+    assistantId {numberId}
+    summonerId {numberId}
     mainClass
     level
     generation
@@ -324,8 +324,8 @@ graphql = 'https://defi-kingdoms-community-api-gateway-co06z8vi.uc.gateway.dev/g
 def get_other_hero_data_graphql(id):
     hero_details ={}
     r = requests.post(graphql, json={'query': HERO_QUERY % (id)}).json()['data']['hero']
-    hero_details['summonerId'] = int(r['summonerId']['id'])
-    hero_details['assistantId'] = int(r['assistantId']['id'])
+    hero_details['summonerId'] = r['summonerId']['numberId']
+    hero_details['assistantId'] = r['assistantId']['numberId']
     hero_details['primary_Class'] = r['mainClass']
     hero_details['level'] = r['level']
     hero_details['summons'] = r['summons']
