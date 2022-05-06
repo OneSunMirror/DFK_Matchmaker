@@ -87,7 +87,7 @@ _class = {
     19: "Ninja",
     24: "Dragoon",
     25: "Sage",
-    20: "Shapeshifter",
+    20: "Shapeshifter (tbc)",
     28: "DreadKnight"
 }
 
@@ -106,7 +106,7 @@ _ability_gene = {
     17: "Advanced2",
     18: "Advanced3",
     19: "Advanced4",
-    20: "Advanced5",
+    20: "Advanced5 (tbc)",
     24: "Elite1",
     25: "Elite2",
     28: "Transcendant1"
@@ -366,7 +366,7 @@ def calc_rarity(r1, r2):
     for i in range(5):
         dict = {
             'name' : hero_rarity[i],
-            'chance' : (rarity_prob[r1][i] + rarity_prob[r2][i])/2       
+            'chance' : round((rarity_prob[r1][i] + rarity_prob[r2][i])/2, 2)       
         }
         prob.append(dict)
     return prob

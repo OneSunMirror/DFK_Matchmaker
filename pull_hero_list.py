@@ -289,7 +289,8 @@ def pull_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, o
   if options['bool_gen']:
     opt = opt + cur.mogrify('AND generation = %s ', (str(generation)))
   if options['bool_summons']:
-    opt = opt + cur.mogrify('AND maxsummons >= %s AND summonsleft >= %s' , (maxsummons, summonsleft))
+    if generation > 0:
+      opt = opt + cur.mogrify('AND maxsummons >= %s AND summonsleft >= %s' , (maxsummons, summonsleft))
   #SQL = SQL + cur.mogrify(') AND generation = %s AND maxsummons >= %s AND summonsleft >= %s', (generation, maxsummons, summonsleft ))
   print(opt)
   SQL = SQL + opt

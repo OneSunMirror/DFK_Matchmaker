@@ -61,13 +61,12 @@ def update_all():
 def data():
     #hero_ID_2 = json.load(request.get_data('data'))
     hero_IDs = json.loads(request.get_data())  
-    hero1_opt = json.loads(hero_IDs['id1_options'])
+    print(hero_IDs)
     id1 = int(hero_IDs['id_1'])
     id2 = int(hero_IDs['id_2'])
-    print(id2)
-    if hero_IDs['id_2_summoned_from'] == 'CV':
+    if not hero_IDs['id_2_zone']:
         id2 = id2 + 1000000000000
-    if not hero1_opt['bool_zone']:
+    if not hero_IDs['id_1_zone']:
         id1 = id1 + 1000000000000
     #hero_2_contract = get_contract(id2, rpc_add)
     #print(hero_2_contract)
