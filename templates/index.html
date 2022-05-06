@@ -197,11 +197,16 @@ function scrollto(element) {
     }, 200);
 }
 
-function get_options(){
+function get_options(check_zone){
+  if (check_zone){
+    bool_zone = document.getElementById("bool_zone").checked
+  } else{
+    bool_zone = true
+  }
   return JSON.stringify({
     'bool_gen' : document.getElementById("bool_gen").checked,
     'bool_summons' : document.getElementById("bool_summons").checked,
-    'bool_zone' : document.getElementById("bool_zone").checked
+    'bool_zone' : bool_zone
   })
 }
 function toggleCollapse(coll, i) {
@@ -328,7 +333,7 @@ for (i = 0; i < coll.length; i++) {
          'async': true,
          'url': '/api/update',
          'dataType' : 'json',
-         'data': JSON.stringify({'id_1' : id_1, 'options' : get_options()}), 
+         'data': JSON.stringify({'id_1' : id_1, 'options' : get_options(false)}), 
          'success': function(res) {
             scrollto("#match_button")
             populate_matches(id_1, res)    
@@ -415,7 +420,7 @@ for (i = 0; i < coll.length; i++) {
          'async': false,
          'url': '/api/update',
          'dataType' : 'json',
-         'data': JSON.stringify({'id_1' : id_1,'options' : get_options()}), 
+         'data': JSON.stringify({'id_1' : id_1,'options' : get_options(true)}), 
          'success': function(res) {
             scrollto("#match_button")   
             populate_matches(id_1, res)   

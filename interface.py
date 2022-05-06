@@ -25,6 +25,7 @@ def update():
     options = json.loads(json.loads(request.get_data())['options'])
     if options['bool_zone'] == False:
         hero_ID_1 = hero_ID_1 +  1000000000000
+    print(hero_ID_1)
     hero_1_contract = get_contract(hero_ID_1, rpc_add)
     gene_prob_1, gene_details_1 = get_gene_prob(hero_1_contract)
     hero_1_details, desc = get_other_hero_data(hero_1_contract)
@@ -65,6 +66,7 @@ def data():
         id2 = id2 + 1000000000000
     print(id2)
     hero_2_contract = get_contract(id2, rpc_add)
+    print(hero_2_contract)
     gene_prob_2, gene_details_2 = get_gene_prob(hero_2_contract)
     hero2_details, hero2_text = get_other_hero_data(hero_2_contract)
     hero_1_contract = get_contract(id1, rpc_add)
