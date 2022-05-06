@@ -134,8 +134,8 @@
 <table id="data" class="table table-striped" style="cursor:pointer">
   <thead>
     <tr>
+      <th>Summoned From</th>
       <th> <img class="scale2" src="{{url_for('static', filename='heart_right.png')}}" /> ID </th>
-      <th>Zone</th>
       <th>Total Score<a data-toggle="tooltip" title="Aggretate score of likely Class and Skill upgrade">&#x1F6C8;</a></th>
       <th>Class Score<a data-toggle="tooltip" title="Based on likelihood of complementary class being selected in the summoning process (higher score means higher chance of class upgrade in summon)">&#x1F6C8;</a></th>
       <th>Skill Score<a data-toggle="tooltip" title="Based on likelihood of complementary skill being selected in the summoning process (higher score means higher chance of skill upgrade in summon) averaged over all 4 skills">&#x1F6C8;</a></th>
@@ -146,6 +146,7 @@
       <th>Generation</th>
       <th>Sale Price</th>
       <th>Rent Price</th>
+      <th>Currency (Auctioned in)</th>
     </tr>
   </thead>
   <tbody>
@@ -269,8 +270,16 @@ for (i = 0; i < coll.length; i++) {
       "aaSorting": [2, "desc"],
       "pageLength" : 50,
       columns: [
+        {data: "summoned_from",
+        render: function(data, type, row, meta){
+            if (data == 'CV'){
+              return "<img src={{url_for('static', filename='crystal.png')}} wide='20' height='20'/>" + data;
+            } else {
+              return "<img src={{url_for('static', filename='jewel.png')}} wide='20' height='20'/> " + data;
+            }
+        }
+      },
         {data: "ID"},
-        {data: "Zone"},
         {data: "Total Score"},
         {data: "Class Score"},
         {data: "Attrib Score"},
@@ -280,7 +289,16 @@ for (i = 0; i < coll.length; i++) {
         {data: "Rarity"},
         {data: "Generation"},
         {data: 'Sale'},
-        {data: 'Rent'}
+        {data: 'Rent'},
+        {data: "auction_in",
+        render: function(data, type, row, meta){
+            if (data == 'Crystal(CV)'){
+              return "<img src={{url_for('static', filename='crystal.png')}} wide='20' height='20'/>" + data;
+            } else {
+              return "<img src={{url_for('static', filename='jewel.png')}} wide='20' height='20'/> " + data;
+            }
+        }
+      } 
       ],
       columnDefs: [
         { type: 'sethigh', targets : [2, 10, 11]}
@@ -439,7 +457,7 @@ for (i = 0; i < coll.length; i++) {
         $.ajax({ 
           url: '/api/match', 
           type: 'POST', 
-          data: JSON.stringify({'id_2' : row_data.ID, 'id_2_Zone' : row_data.Zone, 'id_1' : id_1}),
+          data: JSON.stringify({'id_2' : row_data.ID, 'id_2_summoned_from' : row_data.summoned_from, 'id_1' : id_1, 'id1_options' : get_options(true)}),
           'dataType': 'json',
           success: function(response){ 
             if (response.valid){ 

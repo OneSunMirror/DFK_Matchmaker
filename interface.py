@@ -61,12 +61,14 @@ def update_all():
 def data():
     #hero_ID_2 = json.load(request.get_data('data'))
     hero_IDs = json.loads(request.get_data())  
+    hero1_opt = json.loads(hero_IDs['id1_options'])
     id1 = int(hero_IDs['id_1'])
     id2 = int(hero_IDs['id_2'])
-    id2_Zone = hero_IDs['id_2_Zone']
-    if id2_Zone == 'CV':
-        id2 = id2 + 1000000000000
     print(id2)
+    if hero_IDs['id_2_summoned_from'] == 'CV':
+        id2 = id2 + 1000000000000
+    if not hero1_opt['bool_zone']:
+        id1 = id1 + 1000000000000
     #hero_2_contract = get_contract(id2, rpc_add)
     #print(hero_2_contract)
     #gene_prob_2, gene_details_2 = get_gene_prob(hero_2_contract)
