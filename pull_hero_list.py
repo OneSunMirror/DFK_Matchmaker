@@ -75,6 +75,16 @@ def is_on_auction(token_id, rpc_address):
 #for i in range(1, 100000):
 #  print(is_on_auction(i,rpc_server))
 
+HERO_QUERY = """
+query {
+  hero(id: %d) {
+    statGeness
+  }    
+}
+
+
+
+"""
 
 AUCTIONS_TOKEN_IDS_GRAPHQL_QUERY_FAST = """
                         query {
@@ -184,6 +194,8 @@ def pull_auction_str(cur, GRAPHQL, TYPE):
       #print(auction)
       if auction['tokenId'] == None:
         print(auction['id'])
+      elif (int(auction['id']) > 10000000000000):
+        print(auction['id'])
       else: 
         max_Summons = int(auction['tokenId']['maxSummons']) 
         summons_left = max_Summons - int(auction['tokenId']['summons'])
@@ -216,9 +228,6 @@ def pull_auction_str(cur, GRAPHQL, TYPE):
 #conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 #cur = conn.cursor()
 #pull_auction_str(cur)
-
-
-
 def auctions(auction_address, index, rpc_address):
     w3 = Web3(Web3.HTTPProvider(rpc_address))
 
