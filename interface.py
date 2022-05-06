@@ -84,7 +84,7 @@ def data():
     summon_result = calc_likelyhood(gene_prob_1, gene_prob_2)
     rarity = calc_rarity(hero1_details['rarity_num'], hero2_details['rarity_num'])
     summon_result.append(rarity)
-    print(summon_result)
+    #print(summon_result)
     #print(summon_result)
     #id = request.form['hero_ID_1']
     #id = request.get_data('find_id')
