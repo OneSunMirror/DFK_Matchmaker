@@ -75,16 +75,7 @@ def is_on_auction(token_id, rpc_address):
 #for i in range(1, 100000):
 #  print(is_on_auction(i,rpc_server))
 
-HERO_QUERY = """
-query {
-  hero(id: %d) {
-    statGeness
-  }    
-}
 
-
-
-"""
 
 AUCTIONS_TOKEN_IDS_GRAPHQL_QUERY_FAST = """
                         query {

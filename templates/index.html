@@ -415,6 +415,7 @@ for (i = 0; i < coll.length; i++) {
     var gene_response
     var d_table
     id_1 = $('#hero_ID_1').val()
+    id_1 = id_1.replace(/\D/g,'')
     $.ajax({
          'type': 'POST',
          'async': false,

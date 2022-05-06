@@ -1,6 +1,7 @@
 from asyncio.format_helpers import _format_callback_source
 from web3 import Web3  
 import numpy as np
+import requests
 ABI = ABI = """
             [
                 {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"approved","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Approval","type":"event"},
@@ -295,6 +296,46 @@ def get_gene_prob(hero_contract):
     raw_genes = hero_contract[2][0]
     return calc_prob(raw_genes)
 
+def get_gene_prob_graphql(id):
+    r = requests.post(graphql, json={'query': HERO_QUERY % (id)}).json()['data']['hero']
+    print(r)
+    return calc_prob(int(r['statGenes']))
+
+HERO_QUERY = """
+query {
+  hero(id: %d) {
+    statGenes
+    assistantId {id}
+    summonerId {id}
+    mainClass
+    level
+    generation
+    rarity
+    maxSummons
+    summons
+  }    
+}
+
+"""
+graphql = 'https://defi-kingdoms-community-api-gateway-co06z8vi.uc.gateway.dev/graphql'
+
+
+
+def get_other_hero_data_graphql(id):
+    hero_details ={}
+    r = requests.post(graphql, json={'query': HERO_QUERY % (id)}).json()['data']['hero']
+    hero_details['summonerId'] = int(r['summonerId']['id'])
+    hero_details['assistantId'] = int(r['assistantId']['id'])
+    hero_details['primary_Class'] = r['mainClass']
+    hero_details['level'] = r['level']
+    hero_details['summons'] = r['summons']
+    hero_details['maxsummons'] = r['maxSummons']
+    hero_details['generation'] = r['generation']
+    hero_details['rarity'] = hero_rarity[r['rarity']]
+    hero_details['rarity_num'] = r['rarity']
+    Desc = hero_details['rarity'] + " " + hero_details['primary_Class'] + ", Gen " + str(hero_details['generation']) + ", Level " + str(hero_details['level']) + ", " + str(hero_details['maxsummons'] - hero_details['summons']) + "/" + str(hero_details['maxsummons']) + " Summons"
+    return hero_details, Desc
+
 def get_other_hero_data(hero_contract):
     #print(hero_contract)
     hero_details ={}
@@ -412,3 +453,6 @@ def get_users_heroes(user_address, rpc_address):
 
 'print(get_contract(125261, rpc_add)[1][2:4])'
 
+#print(get_other_hero_data_graphql(12321))
+
+#print(get_other_hero_data(get_contract(12321, rpc_add)))

@@ -26,9 +26,11 @@ def update():
     if options['bool_zone'] == False:
         hero_ID_1 = hero_ID_1 +  1000000000000
     print(hero_ID_1)
-    hero_1_contract = get_contract(hero_ID_1, rpc_add)
-    gene_prob_1, gene_details_1 = get_gene_prob(hero_1_contract)
-    hero_1_details, desc = get_other_hero_data(hero_1_contract)
+    #hero_1_contract = get_contract(hero_ID_1, rpc_add)
+    #gene_prob_1, gene_details_1 = get_gene_prob(hero_1_contract)
+    gene_prob_1, gene_details_1 = get_gene_prob_graphql(hero_ID_1)
+    #hero_1_details, desc = get_other_hero_data(hero_1_contract)
+    hero_1_details, desc = get_other_hero_data_graphql(hero_ID_1)
     DATABASE_URL = os.environ['DATABASE_URL']
     sale_match, last_update, current_time = pull_pg_auction(gene_prob_1, DATABASE_URL, "Sale", [0,3,4,5,6], hero_1_details, options)
     DATABASE_URL = os.environ['HEROKU_POSTGRESQL_YELLOW_URL']
@@ -65,13 +67,18 @@ def data():
     if id2_Zone == 'CV':
         id2 = id2 + 1000000000000
     print(id2)
-    hero_2_contract = get_contract(id2, rpc_add)
-    print(hero_2_contract)
-    gene_prob_2, gene_details_2 = get_gene_prob(hero_2_contract)
-    hero2_details, hero2_text = get_other_hero_data(hero_2_contract)
-    hero_1_contract = get_contract(id1, rpc_add)
-    hero1_details, hero1_text = get_other_hero_data(hero_1_contract)
-    gene_prob_1, gene_details_1 = get_gene_prob(hero_1_contract)
+    #hero_2_contract = get_contract(id2, rpc_add)
+    #print(hero_2_contract)
+    #gene_prob_2, gene_details_2 = get_gene_prob(hero_2_contract)
+    gene_prob_2, gene_details_2 = get_gene_prob_graphql(id2)
+    #hero2_details, hero2_text = get_other_hero_data(hero_2_contract)
+    hero2_details, hero2_text = get_other_hero_data_graphql(id2)
+
+    #hero_1_contract = get_contract(id1, rpc_add)
+    #hero1_details, hero1_text = get_other_hero_data(hero_1_contract)
+    hero1_details, hero1_text = get_other_hero_data_graphql(id1)
+    #gene_prob_1, gene_details_1 = get_gene_prob(hero_1_contract)
+    gene_prob_1, gene_details_1 = get_gene_prob_graphql(id1)
     summon_result = calc_likelyhood(gene_prob_1, gene_prob_2)
     rarity = calc_rarity(hero1_details['rarity_num'], hero2_details['rarity_num'])
     summon_result.append(rarity)
