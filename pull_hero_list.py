@@ -211,7 +211,7 @@ def pull_auction_str(cur, GRAPHQL, TYPE):
           price = int(price)
           #match_data = get_other_hero_data(get_contract(int(hero_id), rpc_add))
           auction_dict[hero_id] = [hero_id,  max_Summons, summons_left, generation, price, gene_prob.tolist(), mainClass, subClass, level, c_rarity, summoned_from, auction_in]
-  print("Total Auctions " + len(auction_dict))
+  #print("Total Auctions " + len(auction_dict))
   auct_str = b', ' .join(cur.mogrify("(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", x) for x in auction_dict.values()) 
   #print(auct_str)
   #print(cur.mogrify("(-1, null, null, null, null, null, " + datetime.now().strftime("%d/%m/%Y %H:%M:%S")))
