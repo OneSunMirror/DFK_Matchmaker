@@ -175,9 +175,10 @@ def manual_auction_pull(TYPE, index, rpc_address):
 
 def pull_auction_str(cur, GRAPHQL, TYPE):
   auction_dict  = {}
+  print("Getting auction from " + TYPE)
   for i in range(1, 10000, 1000):
     auct_dict = get_open_auctions(graphql, GRAPHQL, TYPE, 1000, i)
-    print(len(auct_dict))
+    #print(len(auct_dict))
     #print(auct_dict)
     if(len(auct_dict) == 0):
       break
@@ -210,9 +211,7 @@ def pull_auction_str(cur, GRAPHQL, TYPE):
           price = int(price)
           #match_data = get_other_hero_data(get_contract(int(hero_id), rpc_add))
           auction_dict[hero_id] = [hero_id,  max_Summons, summons_left, generation, price, gene_prob.tolist(), mainClass, subClass, level, c_rarity, summoned_from, auction_in]
-    print(len(auction_dict))
-  
-
+  print("Total Auctions " + len(auction_dict))
   auct_str = b', ' .join(cur.mogrify("(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", x) for x in auction_dict.values()) 
   #print(auct_str)
   #print(cur.mogrify("(-1, null, null, null, null, null, " + datetime.now().strftime("%d/%m/%Y %H:%M:%S")))
@@ -246,7 +245,7 @@ def update_pg_auction(DATABASE_URL, GRAPHQL, TYPE):
   SQL = cur.mogrify('DELETE From heroes')
   cur.execute(SQL)
   conn.commit()
-  print(len(auction_str))
+  #print(len(auction_str))
   SQL = cur.mogrify('INSERT INTO heroes (id,  maxsummons, summonsleft, generation, price, gene, mainclass, subclass, level, rarity, summoned_from, auction_in) VALUES ')  
   SQL = SQL + auction_str
   #print(SQL)
@@ -263,7 +262,7 @@ def pull_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, o
   generation = hero_details['generation']
   maxsummons = hero_details['maxsummons']
   summonsleft = maxsummons - hero_details['summons']
-  print(DATABASE_URL)
+  #print(DATABASE_URL)
   conn = psycopg2.connect(DATABASE_URL, sslmode='require')
   #conn = psycopg2.connect(
   #      host="localhost",
@@ -292,7 +291,7 @@ def pull_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, o
     if generation > 0:
       opt = opt + cur.mogrify('AND maxsummons >= %s AND summonsleft >= %s' , (maxsummons, summonsleft))
   #SQL = SQL + cur.mogrify(') AND generation = %s AND maxsummons >= %s AND summonsleft >= %s', (generation, maxsummons, summonsleft ))
-  print(opt)
+  #print(opt)
   SQL = SQL + opt
   cur.execute(SQL)
   data = cur.fetchall()

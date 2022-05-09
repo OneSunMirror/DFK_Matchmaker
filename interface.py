@@ -25,7 +25,6 @@ def update():
     options = json.loads(json.loads(request.get_data())['options'])
     if options['bool_zone'] == False:
         hero_ID_1 = hero_ID_1 +  1000000000000
-    print(hero_ID_1)
     #hero_1_contract = get_contract(hero_ID_1, rpc_add)
     #gene_prob_1, gene_details_1 = get_gene_prob(hero_1_contract)
     gene_prob_1, gene_details_1 = get_gene_prob_graphql(hero_ID_1)
@@ -35,22 +34,19 @@ def update():
     sale_match, last_update, current_time = pull_pg_auction(gene_prob_1, DATABASE_URL, "Sale", [0,3,4,5,6], hero_1_details, options)
     DATABASE_URL = os.environ['HEROKU_POSTGRESQL_YELLOW_URL']
     rent_match, last_update, current_time = pull_pg_auction(gene_prob_1, DATABASE_URL, "Rent", [0,3,4,5,6], hero_1_details, options)
-    #print(potential_match)
-    #print("update")
     res = {}
     res['hero1'] = gene_details_1
     res['matches'] = sale_match +  rent_match
     res['last_update'] = last_update
     res['current_time'] = current_time
-    #print(json.dumps(gene_1))
-    print(res)
+    print("Finding Match for " + str(hero_ID_1))
     return json.dumps(res)
 
 
 @app.route('/api/update_all', methods=['POST'])
 def update_all():
     contract_add = json.loads(request.get_data())['contract_add']
-    print(contract_add)
+    print("Getting Hereos from: ", contract_add)
     res = []
     for ids in  get_users_heroes(contract_add,rpc_add):
         __, desc = get_other_hero_data(get_contract(ids,rpc_add))
@@ -61,7 +57,6 @@ def update_all():
 def data():
     #hero_ID_2 = json.load(request.get_data('data'))
     hero_IDs = json.loads(request.get_data())  
-    print(hero_IDs)
     id1 = int(hero_IDs['id_1'])
     id2 = int(hero_IDs['id_2'])
     if not hero_IDs['id_2_zone']:
@@ -74,7 +69,7 @@ def data():
     gene_prob_2, gene_details_2 = get_gene_prob_graphql(id2)
     #hero2_details, hero2_text = get_other_hero_data(hero_2_contract)
     hero2_details, hero2_text = get_other_hero_data_graphql(id2)
-
+    print("matching: " + str(id1) + " and " + str(id2))
     #hero_1_contract = get_contract(id1, rpc_add)
     #hero1_details, hero1_text = get_other_hero_data(hero_1_contract)
     hero1_details, hero1_text = get_other_hero_data_graphql(id1)
