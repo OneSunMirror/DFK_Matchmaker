@@ -43,7 +43,7 @@ def update():
     res['last_update'] = last_update
     res['current_time'] = current_time
     #print(json.dumps(gene_1))
-    print(res['hero1'])
+    print(res)
     return json.dumps(res)
 
 

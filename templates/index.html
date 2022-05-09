@@ -153,6 +153,7 @@
 <div class="content" style="overflow-x:auto;"><br>
   <p>To Calculate Match Probabilities, Click on any row in the table below </p>
   <p id="time"> </p>
+
 <table id="data" class="table table-striped" style="cursor:pointer">
   <thead>
     <tr>
@@ -203,17 +204,6 @@
 var coll = document.getElementsByClassName("collapsible");
 var i;
 var global_from_wallet = false
-
-$(function(){
-    $(".popupContent .close").click(function (e) {
-        $(this).closest(".popupContainer").hide();
-        e.preventDefault();
-    });
-    $(".openPopup").click(function (e) {
-        $(".popupContainer").show();
-        e.preventDefault();
-    });
-});
 
 function populate_matches(id_1, matches) {
   $('#hero1_data').DataTable().clear().rows.add(matches.hero1).draw();
@@ -278,7 +268,6 @@ for (i = 0; i < coll.length; i++) {
 }
   $(document).ready(function() {
     var empty_matches = null
-    $('.image-link').magnificPopup({type:'image'});
     toggleCollapse(coll[0], 1)
     tables = document.getElementById("summon_div")
     for (attri in attris) {

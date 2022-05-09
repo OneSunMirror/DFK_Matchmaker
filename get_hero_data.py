@@ -453,6 +453,6 @@ def get_users_heroes(user_address, rpc_address):
 
 'print(get_contract(125261, rpc_add)[1][2:4])'
 
-#print(get_other_hero_data_graphql(12321))
+#print(get_other_hero_data_graphql(190639))
 
 #print(get_other_hero_data(get_contract(12321, rpc_add)))

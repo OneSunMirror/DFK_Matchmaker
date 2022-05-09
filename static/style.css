@@ -217,49 +217,5 @@ input:checked + [class*="slider-"]:before {
   -ms-transform: translateX(26px);
   transform: translateX(26px);
 }
-
-/* Rounded sliders */
-[class*="slider-"].round {
-  border-radius: 34px;
-}
-
-[class*="slider-"].round:before {
-  border-radius: 50%;
-}
 .sliderWrapper{display: inline-block;margin:24px 24px 24px 24px;}
 .sliderWrapper div{display: inline-block;}
-
-body { font-family: sans-serif; }
-.modalOverlay {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: #000;
-    opacity: 0.5;
-    filter: alpha(opacity=50);
-}
-.popupContent {
-    position: absolute;
-    height: 400px;
-    width: 1100px;
-    top: 50%;
-    left: 50%;
-    margin: -100px 0 0 -162px;
-    border: 1px solid #ccc;
-    background: #fff;
-}
-.popupContent > * {
-    margin: 10px;
-}
-.popupContent .close, .popupContent .close:link, .popupContent .close:hover {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    margin: 0;
-    color: #ccc;
-    border: 1px solid #ccc;
-    text-decoration: none;
-    padding: 0 1px;
-}
