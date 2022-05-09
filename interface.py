@@ -28,6 +28,9 @@ def update():
     #hero_1_contract = get_contract(hero_ID_1, rpc_add)
     #gene_prob_1, gene_details_1 = get_gene_prob(hero_1_contract)
     gene_prob_1, gene_details_1 = get_gene_prob_graphql(hero_ID_1)
+    if (gene_prob_1 is None):
+        print("Not valid hero")
+        return json.dumps({'hero_found' : False, "id" : hero_ID_1})
     #hero_1_details, desc = get_other_hero_data(hero_1_contract)
     hero_1_details, desc = get_other_hero_data_graphql(hero_ID_1)
     DATABASE_URL = os.environ['DATABASE_URL']
@@ -35,6 +38,7 @@ def update():
     DATABASE_URL = os.environ['HEROKU_POSTGRESQL_YELLOW_URL']
     rent_match, last_update, current_time = pull_pg_auction(gene_prob_1, DATABASE_URL, "Rent", [0,3,4,5,6], hero_1_details, options)
     res = {}
+    res['hero_found'] = True
     res['hero1'] = gene_details_1
     res['matches'] = sale_match +  rent_match
     res['last_update'] = last_update
@@ -67,6 +71,11 @@ def data():
     #print(hero_2_contract)
     #gene_prob_2, gene_details_2 = get_gene_prob(hero_2_contract)
     gene_prob_2, gene_details_2 = get_gene_prob_graphql(id2)
+    gene_prob_1, gene_details_1 = get_gene_prob_graphql(id1)
+    if (gene_prob_2 is None):
+        return json.dumps({'valid' : False, "valid_txt" : "invalid Hero ID: " + str(id2)})
+    if (gene_prob_1 is None):
+        return json.dumps({'valid' : False, "valid_txt" : "invalid Hero ID: " + str(id1)})
     #hero2_details, hero2_text = get_other_hero_data(hero_2_contract)
     hero2_details, hero2_text = get_other_hero_data_graphql(id2)
     print("matching: " + str(id1) + " and " + str(id2))
@@ -74,7 +83,6 @@ def data():
     #hero1_details, hero1_text = get_other_hero_data(hero_1_contract)
     hero1_details, hero1_text = get_other_hero_data_graphql(id1)
     #gene_prob_1, gene_details_1 = get_gene_prob(hero_1_contract)
-    gene_prob_1, gene_details_1 = get_gene_prob_graphql(id1)
     summon_result = calc_likelyhood(gene_prob_1, gene_prob_2)
     rarity = calc_rarity(hero1_details['rarity_num'], hero2_details['rarity_num'])
     summon_result.append(rarity)

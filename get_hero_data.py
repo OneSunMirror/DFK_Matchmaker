@@ -299,6 +299,8 @@ def get_gene_prob(hero_contract):
 def get_gene_prob_graphql(id):
     r = requests.post(graphql, json={'query': HERO_QUERY % (id)}).json()['data']['hero']
     #print(r)
+    if (r is None):
+        return None, None
     return calc_prob(int(r['statGenes']))
 
 HERO_QUERY = """

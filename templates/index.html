@@ -330,7 +330,7 @@ for (i = 0; i < coll.length; i++) {
         { type: 'sethigh', targets : [2, 10, 11]}
      ],
     });
-    
+
     $('#hero1_data').DataTable({ 
       data : empty_matches,
       retrive :true, searching : false, info : false, paging : false, 
@@ -381,8 +381,12 @@ for (i = 0; i < coll.length; i++) {
          'dataType' : 'json',
          'data': JSON.stringify({'id_1' : id_1, 'options' : get_options(false)}), 
          'success': function(res) {
-            scrollto("#match_button")
-            populate_matches(id_1, res)    
+            if (res.hero_found == true) {
+              scrollto("#match_button")
+              populate_matches(id_1, res)
+            } else{
+              alert("Error: " + res.id + " not found")
+            }    
           }, 
          'error': function(error) {  
          }
@@ -437,20 +441,20 @@ for (i = 0; i < coll.length; i++) {
           'dataType': 'json',
           success: function(response){
             if (response.valid){ 
-              for (attri in attris) {
-                $('#' + attris[attri]).DataTable().clear().rows.add(response.summon[attri]).draw();
-              }
-              $('#hero2_data').DataTable().clear().rows.add(response.hero2).draw();
-              $('#hero1_data').DataTable().clear().rows.add(response.hero1).draw();
-              toggleCollapse(coll[0], 2)  
-              toggleCollapse(coll[3], 1)
-              toggleCollapse(coll[2], 1)
-              toggleCollapse(coll[4], 2)
-              document.getElementById("hero2_text").innerHTML = "Hero Data for: " + $('#hero_ID_2').val()
-              document.getElementById("hero1_text").innerHTML = "Hero Data for: " + $('#hero_ID_1_m').val()
-              document.getElementById("hero1_det").innerHTML = "Parent 1: " + response.hero1_t
-              document.getElementById("hero2_det").innerHTML = "Parent 2: " + response.hero2_t
-            } else{
+                for (attri in attris) {
+                  $('#' + attris[attri]).DataTable().clear().rows.add(response.summon[attri]).draw();
+                }
+                $('#hero2_data').DataTable().clear().rows.add(response.hero2).draw();
+                $('#hero1_data').DataTable().clear().rows.add(response.hero1).draw();
+                toggleCollapse(coll[0], 2)  
+                toggleCollapse(coll[3], 1)
+                toggleCollapse(coll[2], 1)
+                toggleCollapse(coll[4], 2)
+                document.getElementById("hero2_text").innerHTML = "Hero Data for: " + $('#hero_ID_2').val()
+                document.getElementById("hero1_text").innerHTML = "Hero Data for: " + $('#hero_ID_1_m').val()
+                document.getElementById("hero1_det").innerHTML = "Parent 1: " + response.hero1_t
+                document.getElementById("hero2_det").innerHTML = "Parent 2: " + response.hero2_t
+              } else { 
               alert(response.valid_txt)
             }
             } 
@@ -472,8 +476,12 @@ for (i = 0; i < coll.length; i++) {
          'dataType' : 'json',
          'data': JSON.stringify({'id_1' : id_1,'options' : get_options(true)}), 
          'success': function(res) {
+          if (res.hero_found == true) {
             scrollto("#match_button")   
-            populate_matches(id_1, res)   
+            populate_matches(id_1, res)
+          } else{
+            alert("Error: Hero " + res.id + " not found")
+          }   
           }, 
          'error': function(error) {  
 
