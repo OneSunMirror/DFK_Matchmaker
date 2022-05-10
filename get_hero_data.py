@@ -360,9 +360,10 @@ def check_same_parents(a1, a2, a3, b1, b2, b3):
     h2 =[b1, b2, b3]
     for i in range(3):
         for j in range(3):
-            if (h1[i] == h2[j]) and (h1[i] != 0):
+            if (h1[i] == h2[j]) and (int(h1[i])!=0):
                 return False, txt_1[i] + " and " + str(txt_2[j]) + " are the same (" + str(h1[i]) + ")"
     return True, ""
+
 def calc_rarity(r1, r2):
     prob = []
     for i in range(5):
