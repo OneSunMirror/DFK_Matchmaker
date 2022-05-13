@@ -83,7 +83,7 @@ def data():
     #hero1_details, hero1_text = get_other_hero_data(hero_1_contract)
     hero1_details, hero1_text = get_other_hero_data_graphql(id1)
     #gene_prob_1, gene_details_1 = get_gene_prob(hero_1_contract)
-    summon_result = calc_likelyhood(gene_prob_1, gene_prob_2)
+    summon_result = calc_likelyhood_adv(gene_prob_1, gene_prob_2)
     rarity = calc_rarity(hero1_details['rarity_num'], hero2_details['rarity_num'])
     summon_result.append(rarity)
     #print(summon_result)

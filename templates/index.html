@@ -15,10 +15,7 @@
 <h1><img class="scale" src="{{url_for('static', filename='heart.png')}}" /> Defi Kingdoms Matchmaker <img class="scale" src="{{url_for('static', filename='heart.png')}}" /></h1>
 <p>Third Party App, not affliated with DFK Kingdoms, likelihood and scoring are a guide only based on public avaliable information and not calculated by Harmony heroes smartcontract</p>
 <p></p>
-<p>Update 06 May 22, now includes: </p>
-<p> -- updated to now able to search both CV and SD (summoned_from) heroes and Auction Houses (auctioned in)</p>
-<p> -- manual matches also allows heroes summoned in CV and SD</p>
-<p> -- please note that mutation likelihood of new CV heroes is a prediction yet to be confirmed by developer</p>
+<p>Minor update 13 May 22, now highlight mutations in red </p>
 <P>Please check out this project's DFK Build grant submission <a href="https://build.defikingdoms.com/t/dfk-matchmaker-dfkmatchmaker-herokuapp-com/162" target="_blank">here</a> </P>
 
 <p>Tips <a data-toggle="tooltip" title="If this proves to be useful for enough people, tips will go towards upgrade heroku servers and future functionality upgrades">&#x1F6C8;</a> are greatly appreciated @ 0xA5aed0dA6d7Ae07815b044702179192eAe5e3984  <i id='copy_tip' class="fa fa-copy" style="cursor:pointer"></i></p>
@@ -144,6 +141,7 @@
 <h3><img class="scale" src="{{url_for('static', filename='heart.png')}}" /></h3>
 <p><text id="hero1_det"></text></p>
 <p><text id="hero2_det"></text></p>
+<p>Mutations in <font color='red'>red</font></p>
 <div id = "summon_div", class="row">
 </div>
 </div>
@@ -192,11 +190,11 @@
   var attris = new Array()
   attris[0] = "Primary_Class"
   attris[1] = "Sub_Class"
-  attris[2] = "Passive_1"
-  attris[3] = "Passive_2"
-  attris[4] = "Active_1"
-  attris[5] = "Active_2"
-  attris[6] = "Profession"
+  attris[2] = "Profession"
+  attris[3] = "Passive_1"
+  attris[4] = "Passive_2"
+  attris[5] = "Active_1"
+  attris[6] = "Active_2"
   attris[7] = "StatBoost1"
   attris[8] = "StatBoost2"
   attris[9] = "Rarity"
@@ -279,10 +277,13 @@ for (i = 0; i < coll.length; i++) {
        tr = document.createElement("tr");
        row_head1 = document.createElement("th");
        row_head2 = document.createElement("th");
+       row_head3 = document.createElement("th");
        row_head1.innerHTML = attris[attri];
        row_head2.innerHTML = "likelihood";
-       th.appendChild(row_head1);
-       th.appendChild(row_head2);
+       tr.appendChild(row_head1);
+       tr.appendChild(row_head2);
+       tr.appendChild(row_head3);
+       th.appendChild(tr);
        tab.appendChild(th) ;
        tab.className = "table table-striped";
        div.appendChild(tab);
@@ -292,8 +293,9 @@ for (i = 0; i < coll.length; i++) {
     var table_data = $('#data').DataTable({ 
       data : empty_matches, searching : false, info : false,
       retrive : true,
+      'scrollY': '50vh',
       responsive : true,
-      "aaSorting": [2, "desc"],
+      "aaSorting": [1, "desc"],
       "pageLength" : 50,
       columns: [
         {data: "summoned_from",
@@ -363,12 +365,33 @@ for (i = 0; i < coll.length; i++) {
       data : empty_matches,
       responsive : true,
       retrive : true, searching : false, info : false, paging : false,
-      "aaSorting": [],
+      "aaSorting": [2, "desc"],
       columns: [
-        {data: "name"},
-        {data: "chance"},
+      {data: 'name',
+        render: function ( data, type, row, meta ) {
+          if (row.mutated){
+            return "<font color='red'>"+data+"</font>";
+          }
+          return data;
+        }},
+        {data: 'chance',
+        render: function ( data, type, row, meta ) {
+          if (row.mutated){
+            return "<font color='red'>"+data+"</font>";
+          }
+          return data;
+        }},
+        {data: 'chance', 
+        visible: false,
+        width: 1}
+      ],    
+        columnDefs: [
+        {
+          target: 2, visible: false
+        }
       ]
-    });
+      }
+    );
   };
   });
   $("#hero_list").on("click","input",function(){

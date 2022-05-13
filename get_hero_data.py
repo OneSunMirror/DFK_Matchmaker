@@ -222,6 +222,8 @@ stat_traits = {
     11: 'statsUnknown2'
 }
 
+SCOPE_OF_TRAITS_COUNT = 9
+
 gene_encoding = {
     0: _class,
     1: _class,
@@ -442,6 +444,31 @@ def calc_likelyhood(gene1, gene2):
     #print(dict_result)
     return  dict_result
 
+def calc_likelyhood_adv(gene1, gene2):
+    new_genes = np.zeros([11,32])
+    for i in scope_of_genes:
+        for j in range(32):
+            if (i in muteable_genes) and (j in complement_gene):
+                upgrade_p = (gene1[i][j] * gene2[i][complement_gene[j]])  * upgrade_chances(j)
+                new_genes[i][upgrade_gene[j]] += upgrade_p
+                new_genes[i][j] -= upgrade_p *0.5
+                new_genes[i][complement_gene[j]] -= upgrade_p * 0.5
+            new_genes[i][j] += gene1[i][j] * 0.5 +  gene2[i][j] * 0.5 
+    dict_lists = [[] for i in range(SCOPE_OF_TRAITS_COUNT)]
+    #print(dict_lists)
+    for j in range(32):
+        for i in scope_of_genes:
+            if j in gene_encoding[i]:
+                likelihood = round(new_genes[i,j]*100,2)
+                if likelihood > 0.0:
+                    if (gene1[i][j] == 0.0 and gene2[i][j] == 0.0): 
+                        is_mutated = True 
+                    else:
+                        is_mutated = False
+                    dict_lists[i].append({'name' : gene_encoding[i][j], 'chance' : likelihood, 'mutated' : is_mutated})
+    #print(dict_lists)
+    return dict_lists
+
 def get_users_heroes(user_address, rpc_address):
     w3 = Web3(Web3.HTTPProvider(rpc_address))
 
@@ -450,9 +477,11 @@ def get_users_heroes(user_address, rpc_address):
 
     return contract.functions.getUserHeroes(Web3.toChecksumAddress(user_address)).call()
 
-#print(calc_likelyhood(get_gene_prob(get_contract(12, rpc_add)),get_gene_prob(get_contract(13, rpc_add))))
 
-
+#gene_prob_2, gene_details_2 = get_gene_prob_graphql(123223)
+#gene_prob_1, gene_details_1 = get_gene_prob_graphql(21223)
+#summon_result = calc_likelyhood(gene_prob_1, gene_prob_2)
+#summon_result = calc_likelyhood_adv(gene_prob_1, gene_prob_2)
 
 #'print(get_contract(125261, rpc_add)[1][2:4])'
 

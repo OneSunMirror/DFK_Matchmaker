@@ -114,6 +114,12 @@ body {
   background-color: #f1f1f1;
   transition: max-height 0.2s ease-out;
 }
+ 
+  
+
+
+
+
 /* Tooltip container */
 .tooltip {
   position: relative;
@@ -219,3 +225,40 @@ input:checked + [class*="slider-"]:before {
 }
 .sliderWrapper{display: inline-block;margin:24px 24px 24px 24px;}
 .sliderWrapper div{display: inline-block;}
+
+.irs--round .irs-bar {
+  background-color: #00C2C0;
+}
+
+.irs--round .irs-handle {
+ background-color: #00C2C0;
+ border-color: #00C2C0;
+ box-shadow: 0px 0px 0px 5px rgba(0, 194, 192, 0.2);
+}
+
+.irs--round .irs-handle.state_hover, 
+.irs--round .irs-handle:hover {
+  background-color: #00C2C0;
+}
+
+.irs--round .irs-handle {
+ width: 16px;
+ height: 16px;
+ top: 29px
+}
+
+.irs--round .irs-from, 
+.irs--round .irs-to, 
+.irs--round .irs-single {
+ background-color: transparent;
+ color: #666666;
+}
+
+.irs--round .irs-from:before, 
+.irs--round .irs-to:before, 
+.irs--round .irs-single:before,
+.irs--round .irs-min, 
+.irs--round .irs-max {
+ display: none;
+}
+

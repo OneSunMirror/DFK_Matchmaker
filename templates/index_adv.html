@@ -5,13 +5,20 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Quantico&display=swap" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}")>
+  <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='add_style.css')}}")>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css"/>
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body style="background-color:rgba(170, 173, 115, 0.199)">
+
+   
 <h1><img class="scale" src="{{url_for('static', filename='heart.png')}}" /> Defi Kingdoms Matchmaker <img class="scale" src="{{url_for('static', filename='heart.png')}}" /></h1>
 <p>Third Party App, not affliated with DFK Kingdoms, likelihood and scoring are a guide only based on public avaliable information and not calculated by Harmony heroes smartcontract</p>
 <p></p>
@@ -67,8 +74,6 @@
 
 </div>
 <p></p>
-
-
 <button type="button" class="collapsible" text-align="cent"><a data-toggle="tooltip" title="Manually enter ID of the second hero rather than searching the Auction House">&#x1F6C8;</a> Manual Match</button>
 <div class="content"><br>
   <p>Instruction: Enter your hero ID (no need to add the 1 + twelve 0s infront for Crystalvale hero, simply use the toggle under the input box)</p>
@@ -139,6 +144,11 @@
 </div>
 </div>
 <p></p>
+<button type="button" class="collapsible" text-align="cent" padding="0px" font-size="12px"><a data-toggle="tooltip" title="Filter Options for Auction Table">&#x1F6C8;</a> Filter Options </button>
+<div class ="content">
+<p>Test</p>
+</div>
+
 <button type="button" class="collapsible" text-align="cent"><a data-toggle="tooltip" title="See Notes section on algorithm source">&#x1F6C8;</a>Summoning Probabilities</button>
 <div class="content"><br>
 <h3><img class="scale" src="{{url_for('static', filename='heart.png')}}" /></h3>
@@ -153,7 +163,7 @@
 <div class="content" style="overflow-x:auto;"><br>
   <p>To Calculate Match Probabilities, Click on any row in the table below </p>
   <p id="time"> </p>
-
+  
 <table id="data" class="table table-striped" style="cursor:pointer">
   <thead>
     <tr>
@@ -182,11 +192,105 @@
 <div class="content"><br>
 <p>Thanks to <a href="https://github.com/0rtis/dfk/tree/master/hero" target="_blank">0tis</a> for Hero and Auction House API code  </p>
 <p>Thanks to Mr Zipper for <a href="https://medium.com/@MrZipper7/deep-dive-hero-genetics-975902dfbf80" target="_blank">Class</a> and <a href="https://medium.com/@MrZipper7/deep-dive-active-passive-genes-68315567361c" target="_blank" rel="noopener noreferrer">Skills/Combat </a>Summoning Algorithms  </p>
+</div>
 
+
+
+<div class="row" style="overflow-x:auto;">
+  <div class="column_1">
+<section class="accordion" role="tablist" aria-live="polite" data-behavior="accordion">
+
+  <article class="accordion__item js-show-item-default" data-binding="expand-accordion-item">
+    <span id="tab1" tabindex="0" class="accordion__title" aria-controls="panel1" role="tab" aria-selected="false" aria-expanded="false" data-binding="expand-accordion-trigger">
+      <h5>Use the tab key to navigate...</h5>
+    </span>
+
+    <div id="panel1" class="accordion__content" role="tabpanel" aria-hidden="true" aria-labelledby="tab1" data-binding="expand-accordion-container">
+      <div class="accordion__content-inner">
+        <p>You can cycle through all the different accordion items through tabbing.</p>
+      </div>
+    </div>
+
+  </article>
+
+
+  <article class="accordion__item js-show-item-default" data-binding="expand-accordion-item">
+    <span id="tab2" tabindex="0" class="accordion__title" aria-controls="panel2" role="tab" aria-selected="false" aria-expanded="false" data-binding="expand-accordion-trigger">
+      <h5>Or, you can use your mouse.</h5>
+    </span>
+
+    <div id="panel2" class="accordion__content" role="tabpanel" aria-hidden="true" aria-labelledby="tab2" data-binding="expand-accordion-container">
+      <div class="accordion__content-inner">
+        <p>This accordion can be used by both mouse and keyboard-only users.</p>
+      </div>
+    </div>
+  </article>
+  
+  <article class="accordion__item js-show-item-default" data-binding="expand-accordion-item">
+    <span id="tab3" tabindex="0" class="accordion__title" aria-controls="panel3" role="tab" aria-selected="false" aria-expanded="false" data-binding="expand-accordion-trigger">
+      <h5>Click here to view more</h5>
+    </span>
+
+    <div id="panel3" class="accordion__content" role="tabpanel" aria-hidden="true" aria-labelledby="tab3" data-binding="expand-accordion-container">
+      <div class="accordion__content-inner">
+        <p>You can also use either the space bar or enter key to expand/collapse these panels.</p>
+      </div>
+    </div>
+  </article>
+  
+  <article class="accordion__item js-show-item-default" data-binding="expand-accordion-item">
+    <span id="tab4" tabindex="0" class="accordion__title" aria-controls="panel4" role="tab" aria-selected="false" aria-expanded="false" data-binding="expand-accordion-trigger">
+      <h5>ARIA</h5>
+    </span>
+
+    <div id="panel4" class="accordion__content" role="tabpanel" aria-hidden="true" aria-labelledby="tab4" data-binding="expand-accordion-container">
+      <div class="accordion__content-inner">
+        <p>This accordion makes use of ARIA tags which help aid accessibility.</p>
+      </div>
+    </div>
+  </article>
+
+</section>
+</div>
+
+<!-- Accordion 2 -->
+<section class="accordion" role="tablist" aria-live="polite" data-behavior="accordion">
+  <article class="accordion__item js-show-item-default" data-binding="expand-accordion-item">
+    <span id="tab5" tabindex="0" class="accordion__title" aria-controls="panel5" role="tab" aria-selected="false" aria-expanded="false" data-binding="expand-accordion-trigger">
+      <h5>Heading 1</h5>
+    </span>
+
+    <div id="panel5" class="accordion__content" role="tabpanel" aria-hidden="true" aria-labelledby="tab5" data-binding="expand-accordion-container">
+      <div class="accordion__content-inner">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+      </div>
+    </div>
+    <p>
+    </p>
+  </article>
+
+  <article class="accordion__item js-show-item-default" data-binding="expand-accordion-item">
+    <span id="tab6" tabindex="0" class="accordion__title" aria-controls="panel6" role="tab" aria-selected="false" aria-expanded="false" data-binding="expand-accordion-trigger">
+      <h5>Heading 2</h5>
+    </span>
+
+    <div id="panel6" class="accordion__content" role="tabpanel" aria-hidden="true" aria-labelledby="tab6" data-binding="expand-accordion-container">
+      <div class="accordion__content-inner">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+      </div>
+    </div>
+  </article>
+</section>
+</div>
+</div>
+<input type="text" class="js-range-slider" name="my_range" value="" />
 <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
+
 <script src="{{url_for('static', filename='novalue.js')}}"></script>
+<script src="{{url_for('static', filename='accordian.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js"></script>
 <script>
   var id_1
   var attris = new Array()
@@ -204,6 +308,16 @@
 var coll = document.getElementsByClassName("collapsible");
 var i;
 var global_from_wallet = false
+
+$(".js-range-slider").ionRangeSlider({
+        type: "integer",
+        min: 0,
+        max: 11,
+        from: 0,
+        to: 11,
+        grid: true,
+        freeMode: true
+    });
 
 function populate_matches(id_1, matches) {
   $('#hero1_data').DataTable().clear().rows.add(matches.hero1).draw();
@@ -271,24 +385,25 @@ for (i = 0; i < coll.length; i++) {
     toggleCollapse(coll[0], 1)
     tables = document.getElementById("summon_div")
     for (attri in attris) {
-       div = document.createElement("div");
-       div.className = "column_2" ;
-       tab = document.createElement("table");
-       tab.id = attris[attri];
-       th = document.createElement("thead");
-       tr = document.createElement("tr");
-       row_head1 = document.createElement("th");
-       row_head2 = document.createElement("th");
-       row_head1.innerHTML = attris[attri];
-       row_head2.innerHTML = "likelihood";
-       th.appendChild(row_head1);
-       th.appendChild(row_head2);
-       tab.appendChild(th) ;
-       tab.className = "table table-striped";
-       div.appendChild(tab);
-       tables.appendChild(div);
+        div = document.createElement("div");
+        div.className = "column_2" ;
+        tab = document.createElement("table");
+        tab.id = attris[attri];
+        th = document.createElement("thead");
+        tr = document.createElement("tr");
+        row_head1 = document.createElement("th");
+        row_head2 = document.createElement("th");
+        row_head1.innerHTML = attris[attri];
+        row_head2.innerHTML = "likelihood";
+        th.appendChild(row_head1);
+        th.appendChild(row_head2);
+        tab.appendChild(th) ;
+        tab.className = "table table-striped";
+        div.appendChild(tab);
+        tables.appendChild(div);
     }
-    
+    create_section("col_1","section_1", "Testing")
+
     var table_data = $('#data').DataTable({ 
       data : empty_matches, searching : false, info : false,
       retrive : true,
