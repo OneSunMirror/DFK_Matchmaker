@@ -201,7 +201,8 @@ def pull_auction_str(cur, GRAPHQL, TYPE):
           else:
             summoned_from = "SD"
         #print(auction['tokenId'])
-          gene_prob, __ = calc_prob(convert_int(auction['tokenId']['statGenes']))
+          gene_string = auction['tokenId']['statGenes']
+          gene_prob, g_s = calc_prob(convert_int(gene_string))
           generation = convert_int(auction['tokenId']['generation'])
           c_rarity = rarity[int(auction['tokenId']['rarity'])]
           mainClass = auction['tokenId']['mainClass']
@@ -210,12 +211,12 @@ def pull_auction_str(cur, GRAPHQL, TYPE):
           price = float(auction['startingPrice']) / 1000000000000000000
           price = int(price)
           #match_data = get_other_hero_data(get_contract(int(hero_id), rpc_add))
-          auction_dict[hero_id] = [hero_id,  max_Summons, summons_left, generation, price, gene_prob.tolist(), mainClass, subClass, level, c_rarity, summoned_from, auction_in]
+          auction_dict[hero_id] = [hero_id,  max_Summons, summons_left, generation, price, gene_prob.tolist(), mainClass, subClass, level, c_rarity, summoned_from, auction_in, json.dumps(g_s)]
   #print("Total Auctions " + len(auction_dict))
-  auct_str = b', ' .join(cur.mogrify("(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", x) for x in auction_dict.values()) 
+  auct_str = b', ' .join(cur.mogrify("(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", x) for x in auction_dict.values()) 
   #print(auct_str)
   #print(cur.mogrify("(-1, null, null, null, null, null, " + datetime.now().strftime("%d/%m/%Y %H:%M:%S")))
-  auct_str = auct_str + cur.mogrify(", ('-1', null, null, null, null, null, '" + datetime.now().strftime("%d/%m/%Y %H:%M:%S") + "', null, null, null, null, null)")
+  auct_str = auct_str + cur.mogrify(", ('-1', null, null, null, null, null, '" + datetime.now().strftime("%d/%m/%Y %H:%M:%S") + "', null, null, null, null, null, null)")
   return auct_str
 
 #DATABASE_URL = os.environ['DATABASE_URL']
@@ -246,7 +247,7 @@ def update_pg_auction(DATABASE_URL, GRAPHQL, TYPE):
   cur.execute(SQL)
   conn.commit()
   #print(len(auction_str))
-  SQL = cur.mogrify('INSERT INTO heroes (id,  maxsummons, summonsleft, generation, price, gene, mainclass, subclass, level, rarity, summoned_from, auction_in) VALUES ')  
+  SQL = cur.mogrify('INSERT INTO heroes (id,  maxsummons, summonsleft, generation, price, gene, mainclass, subclass, level, rarity, summoned_from, auction_in, gene_string) VALUES ')  
   SQL = SQL + auction_str
   #print(SQL)
   #SQL = cur.mogrify('Select * From heroes')
@@ -275,7 +276,7 @@ def pull_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, o
     for j in range(0,len(hero_gene[i])):
         if hero_gene[i][j] >= 0.75:
           search_space_txt += ', gene[%s][%s]' % (i+1, complement_gene[j]+1)
-  sql_str = 'SELECT id, mainclass, subclass, rarity, generation, maxsummons, summonsleft, level, price, summoned_from, auction_in' + search_space_txt + ' FROM Heroes Where ('
+  sql_str = 'SELECT id, mainclass, subclass, rarity, generation, maxsummons, summonsleft, level, price, summoned_from, auction_in, gene_string' + search_space_txt + ' FROM Heroes Where ('
   #print(sql_str)
   SQL = cur.mogrify(sql_str)
   for i in search_space:
@@ -310,18 +311,18 @@ def pull_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, o
   #print(len(data))
   for match in data:
     #match_data = get_other_hero_data(get_contract(match[0], rpc_add))
-    attributes= ['ID', 'Class', 'Sub Class', 'Rarity', 'Generation', 'Max Summons', 'Summons Left', 'level', TYPE, 'summoned_from', 'auction_in']
-    dict_attri = {attributes[i]: match[i] for i in range(0, 11)}
+    attributes= ['ID', 'Class', 'Sub Class', 'Rarity', 'Generation', 'Max Summons', 'Summons Left', 'level', TYPE, 'summoned_from', 'auction_in', 'gene_string']
+    dict_attri = {attributes[i]: match[i] for i in range(0, 12)}
     dict_attri[O_TYPE] = 'N/A'
     comb_score = 0
     tot_score = 0
     j = 0
     for i in search_space:
       if i == 0:
-        tot_score += match[j+11]
-        dict_attri[stat_traits[i] + ' Score'] = match[i+11]
+        tot_score += match[j+12]
+        dict_attri[stat_traits[i] + ' Score'] = match[i+12]
       elif (i >= 3) and (i <= 6):
-        comb_score += match[j+11]
+        comb_score += match[j+12]
       dict_attri['Attrib Score'] = comb_score / 4
       if dict_attri['Summons Left'] < 0:
         dict_attri['Summons'] = "N/A Gen 0"
@@ -330,7 +331,7 @@ def pull_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, o
       dict_attri['Total Score'] = tot_score + comb_score / 4 
       j += 1
     matches.append(dict_attri)
-  #print(matches)
+  print(matches)
   #found_data["data"] = matches
   current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
   return matches, last_update, current_time
