@@ -43,9 +43,9 @@ def update():
     res['matches'] = sale_match +  rent_match
     res['last_update'] = last_update
     res['current_time'] = current_time
+    #print(sale_match)
     print("Finding Match for " + str(hero_ID_1))
     return json.dumps(res)
-
 
 @app.route('/api/update_all', methods=['POST'])
 def update_all():

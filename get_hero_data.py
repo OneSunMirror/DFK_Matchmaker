@@ -392,11 +392,7 @@ def calc_prob(raw_genes):
             dict_gene_all.append(dict_gene)
             dict_gene = {}
     return p_genes, dict_gene_all            
-
-
-
-
-
+    
 #print(get_gene_prob(contract))
 
 def calc_likelyhood(gene1, gene2):

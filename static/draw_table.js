@@ -25,6 +25,40 @@ function update_table_data (id, data){
     
 }
 
+
+function sub_DataTable(table_id, data) {
+    $('#'+table_id).DataTable({
+        "data": JSON.parse(data),
+        retrive :true, searching : false, info : false, paging : false, 
+      "aaSorting": [],
+      responsive : true,
+        columns: [
+            {data: "type"},
+            {data: "D"},
+            {data: "R1"},
+            {data: "R2"},
+            {data: "R3"}
+          ]
+        }
+        )
+}
+
+function format ( table_id ) {
+    // `d` is the original data object for the row
+    return '<table id="'+table_id+'" class="display" border="0" style="padding-left:50px; width:50%;">'+
+    '<thead>'+
+    '<tr>'+
+    '<th>Gene</th>'+
+    '<th>D</th>'+
+    '<th>R1</th>'+
+    '<th>R2</th>'+
+    '<th>R3</th>'+          
+    '</tr>'+
+    '</thead>'+
+    '</table>';
+}
+
+
 var $range = $(".js-range-slider"),
     $from = $(".from"),
     $to = $(".to"),

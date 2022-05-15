@@ -331,7 +331,7 @@ def pull_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, o
       dict_attri['Total Score'] = tot_score + comb_score / 4 
       j += 1
     matches.append(dict_attri)
-  print(matches)
+  #print(matches)
   #found_data["data"] = matches
   current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
   return matches, last_update, current_time

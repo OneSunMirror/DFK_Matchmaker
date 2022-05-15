@@ -8,7 +8,6 @@
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css">
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -16,7 +15,7 @@
 <h1><img class="scale" src="{{url_for('static', filename='heart.png')}}" /> Defi Kingdoms Matchmaker <img class="scale" src="{{url_for('static', filename='heart.png')}}" /></h1>
 <p>Third Party App, not affliated with DFK Kingdoms, likelihood and scoring are a guide only based on public avaliable information and not calculated by Harmony heroes smartcontract</p>
 <p></p>
-<p>Minor update 15 May 22, now users can click on 'Gene Details' column to see the genes without having to match</p>
+<p>Minor update 13 May 22, now highlight mutations in red </p>
 <P>Please check out this project's DFK Build grant submission <a href="https://build.defikingdoms.com/t/dfk-matchmaker-dfkmatchmaker-herokuapp-com/162" target="_blank">here</a> </P>
 
 <p>Tips <a data-toggle="tooltip" title="If this proves to be useful for enough people, tips will go towards upgrade heroku servers and future functionality upgrades">&#x1F6C8;</a> are greatly appreciated @ 0xA5aed0dA6d7Ae07815b044702179192eAe5e3984  <i id='copy_tip' class="fa fa-copy" style="cursor:pointer"></i></p>
@@ -161,7 +160,6 @@
       <th>Total Score<a data-toggle="tooltip" title="Aggretate score of likely Class and Skill upgrade">&#x1F6C8;</a></th>
       <th>Class Score<a data-toggle="tooltip" title="Based on likelihood of complementary class being selected in the summoning process (higher score means higher chance of class upgrade in summon)">&#x1F6C8;</a></th>
       <th>Skill Score<a data-toggle="tooltip" title="Based on likelihood of complementary skill being selected in the summoning process (higher score means higher chance of skill upgrade in summon) averaged over all 4 skills">&#x1F6C8;</a></th>
-      <th>Gene Details</th>
       <th>Summons</th>
       <th>Class</th>
       <th>Sub Class</th>
@@ -187,7 +185,6 @@
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
 <script src="{{url_for('static', filename='novalue.js')}}"></script>
-<script src="{{url_for('static', filename='draw_table.js')}}"></script>
 <script>
   var id_1
   var attris = new Array()
@@ -314,16 +311,6 @@ for (i = 0; i < coll.length; i++) {
         {data: "Total Score"},
         {data: "Class Score"},
         {data: "Attrib Score"},
-        {
-                className: 'details-control',
-                orderable: false,
-                data: null,
-                defaultContent: '',
-                "render": function () {
-                         return '<i class="fa fa-plus-square" aria-hidden="true"></i>';
-                     },
-                width:"15px"
-        },
         {data: "Summons"},
         {data: "Class"},
         {data: "Sub Class"},
@@ -408,6 +395,7 @@ for (i = 0; i < coll.length; i++) {
   };
   });
   $("#hero_list").on("click","input",function(){
+    id_1 = this.value
     global_from_wallet = true;
     $.ajax({
          'type': 'POST',
@@ -526,31 +514,8 @@ for (i = 0; i < coll.length; i++) {
   $('#data').on( 'length', function ( e, settings, len ) {
     toggleCollapse(coll[4], 1)
   } );
-  
-  $('#data').on('click', 'tr td', function () {
+  $('#data').on('click', 'tbody tr', function () {
         var row_data = table_data.row($(this)).data();
-        var tr = $(this).closest('tr');
-        var tdi = tr.find("i.fa");
-        var row = table_data.row(tr);
-        var visIdx = $(this).index();
-        var dataIdx = table_data.column.index( 'fromVisible', visIdx );
-        if (dataIdx == 5) {
-          if (row.child.isShown()) {
-            tdi.first().removeClass('fa-minus-square');
-            tdi.first().addClass('fa-plus-square');
-            row.child.hide();
-        } else {
-            tdi.first().removeClass('fa-plus-square');
-            tdi.first().addClass('fa-minus-square');
-            row.child(format("subtable-"+row.index())).show();
-            sub_DataTable("subtable-"+row.index(), row_data.gene_string); 
-            // Add to the 'open' array
-            if (dataIdx === -1) {
-                detailRows.push(tr.attr('id'));
-            }
-          }
-        }
-        else if (dataIdx > 0){
         if (row_data.summoned_from == 'CV'){
           var id_2_zone = false;
         } else {
@@ -583,7 +548,7 @@ for (i = 0; i < coll.length; i++) {
           }
           } 
         })
-    }});
+    });
 </script>
 
 </body>

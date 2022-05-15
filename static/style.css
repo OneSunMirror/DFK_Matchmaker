@@ -115,11 +115,6 @@ body {
   transition: max-height 0.2s ease-out;
 }
  
-  
-
-
-
-
 /* Tooltip container */
 .tooltip {
   position: relative;
@@ -260,5 +255,15 @@ input:checked + [class*="slider-"]:before {
 .irs--round .irs-min, 
 .irs--round .irs-max {
  display: none;
+}
+
+td.details-control {
+  text-align:center;
+  color:forestgreen;
+  cursor: pointer;
+}
+tr.shown td.details-control {
+text-align:center; 
+color:red;
 }
 

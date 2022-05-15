@@ -172,6 +172,7 @@
       <th>Total Score<a data-toggle="tooltip" title="Aggretate score of likely Class and Skill upgrade">&#x1F6C8;</a></th>
       <th>Class Score<a data-toggle="tooltip" title="Based on likelihood of complementary class being selected in the summoning process (higher score means higher chance of class upgrade in summon)">&#x1F6C8;</a></th>
       <th>Skill Score<a data-toggle="tooltip" title="Based on likelihood of complementary skill being selected in the summoning process (higher score means higher chance of skill upgrade in summon) averaged over all 4 skills">&#x1F6C8;</a></th>
+      <th>Gene Details</th>
       <th>Summons</th>
       <th>Class</th>
       <th>Sub Class</th>
@@ -424,6 +425,12 @@ for (i = 0; i < coll.length; i++) {
         {data: "Total Score"},
         {data: "Class Score"},
         {data: "Attrib Score"},
+        {
+                className: 'dt-control',
+                orderable: false,
+                data: null,
+                defaultContent: '',
+        },
         {data: "Summons"},
         {data: "Class"},
         {data: "Sub Class"},
@@ -442,7 +449,7 @@ for (i = 0; i < coll.length; i++) {
       } 
       ],
       columnDefs: [
-        { type: 'sethigh', targets : [2, 10, 11]}
+        { type: 'sethigh', targets : [2, 11, 12]}
      ],
     });
 
@@ -478,12 +485,33 @@ for (i = 0; i < coll.length; i++) {
       data : empty_matches,
       responsive : true,
       retrive : true, searching : false, info : false, paging : false,
-      "aaSorting": [],
+      "aaSorting": [2, "desc"],
       columns: [
-        {data: "name"},
-        {data: "chance"},
+      {data: 'name',
+        render: function ( data, type, row, meta ) {
+          if (row.mutated){
+            return "<font color='red'>"+data+"</font>";
+          }
+          return data;
+        }},
+        {data: 'chance',
+        render: function ( data, type, row, meta ) {
+          if (row.mutated){
+            return "<font color='red'>"+data+"</font>";
+          }
+          return data;
+        }},
+        {data: 'chance', 
+        visible: false,
+        width: 1}
+      ],    
+        columnDefs: [
+        {
+          target: 2, visible: false
+        }
       ]
-    });
+      }
+    );
   };
   });
   $("#hero_list").on("click","input",function(){
