@@ -139,7 +139,7 @@ def upgrade_chances(i):
     if i in range(24,26): 
         return 0.125
     if i == 28: 
-        return 1
+        return 0
     return 0 
 
 complement_gene = {
@@ -456,12 +456,9 @@ def calc_likelyhood_adv(gene1, gene2):
         for i in scope_of_genes:
             if j in gene_encoding[i]:
                 likelihood = round(new_genes[i,j]*100,2)
-                if likelihood > 0.0:
-                    if (gene1[i][j] == 0.0 and gene2[i][j] == 0.0): 
-                        is_mutated = True 
-                    else:
-                        is_mutated = False
-                    dict_lists[i].append({'name' : gene_encoding[i][j], 'chance' : likelihood, 'mutated' : is_mutated})
+                if likelihood > 0:
+                    mutated = round(100*(new_genes[i,j] - ((gene1[i][j] + gene2[i][j])) * 0.5),2)
+                    dict_lists[i].append({'name' : gene_encoding[i][j], 'chance' : likelihood, 'mutated' : mutated})
     #print(dict_lists)
     return dict_lists
 

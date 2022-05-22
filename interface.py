@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
 @app.route('/')
 def init():
-    return render_template('index.html')
+    return render_template('index_new.html')
 
 @app.route('/api/update', methods=['POST'])
 def update():
@@ -34,9 +34,9 @@ def update():
     #hero_1_details, desc = get_other_hero_data(hero_1_contract)
     hero_1_details, desc = get_other_hero_data_graphql(hero_ID_1)
     DATABASE_URL = os.environ['DATABASE_URL']
-    sale_match, last_update, current_time = pull_pg_auction(gene_prob_1, DATABASE_URL, "Sale", [0,3,4,5,6], hero_1_details, options)
+    sale_match, last_update, current_time = pull_pg_auction(gene_prob_1, DATABASE_URL, "Sale", [0,1,3,4,5,6], hero_1_details, options)
     DATABASE_URL = os.environ['HEROKU_POSTGRESQL_YELLOW_URL']
-    rent_match, last_update, current_time = pull_pg_auction(gene_prob_1, DATABASE_URL, "Rent", [0,3,4,5,6], hero_1_details, options)
+    rent_match, last_update, current_time = pull_pg_auction(gene_prob_1, DATABASE_URL, "Rent", [0,1, 3,4,5,6], hero_1_details, options)
     res = {}
     res['hero_found'] = True
     res['hero1'] = gene_details_1

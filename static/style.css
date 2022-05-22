@@ -67,7 +67,7 @@ body {
       width: 100%;
       border: 1px solid #ddd;
     }
-    th, td {
+    td {
       text-align: left;
       padding: 2px;
     }
@@ -75,7 +75,22 @@ body {
       background-color: #f2f2f2;
     }
     /* Style the button that is used to open and close the collapsible content */
-.collapsible {
+    th.rotated-text {
+        height: 140px;
+      white-space: nowrap;
+      padding: 0 !important;
+  }
+  
+  th.rotated-text > div {
+      transform:rotate(-90deg);
+      width: 30px;
+  }
+  
+  th.rotated-text > div > span {
+      padding: 0px 15px;
+  }
+
+  .collapsible {
   background-color: rgba(170, 173, 115, 0.199);
   border-color: #F3D734;
   border-width: 5px;

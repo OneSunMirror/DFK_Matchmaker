@@ -273,9 +273,11 @@ def pull_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, o
   cur = conn.cursor()
   search_space_txt = ''
   for i in search_space:
+    search_space_txt += ', ('
     for j in range(0,len(hero_gene[i])):
-        if hero_gene[i][j] >= 0.75:
-          search_space_txt += ', gene[%s][%s]' % (i+1, complement_gene[j]+1)
+        if hero_gene[i][j] > 0.0:
+          search_space_txt += '+ gene[%s][%s] * %s * %s' % (i+1, complement_gene[j]+1, hero_gene[i][j], upgrade_chances(j))
+    search_space_txt += ')'
   sql_str = 'SELECT id, mainclass, subclass, rarity, generation, maxsummons, summonsleft, level, price, summoned_from, auction_in, gene_string' + search_space_txt + ' FROM Heroes Where ('
   #print(sql_str)
   SQL = cur.mogrify(sql_str)
@@ -314,22 +316,18 @@ def pull_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, o
     attributes= ['ID', 'Class', 'Sub Class', 'Rarity', 'Generation', 'Max Summons', 'Summons Left', 'level', TYPE, 'summoned_from', 'auction_in', 'gene_string']
     dict_attri = {attributes[i]: match[i] for i in range(0, 12)}
     dict_attri[O_TYPE] = 'N/A'
-    comb_score = 0
     tot_score = 0
     j = 0
     for i in search_space:
-      if i == 0:
-        tot_score += match[j+12]
-        dict_attri[stat_traits[i] + ' Score'] = match[i+12]
-      elif (i >= 3) and (i <= 6):
-        comb_score += match[j+12]
-      dict_attri['Attrib Score'] = comb_score / 4
-      if dict_attri['Summons Left'] < 0:
-        dict_attri['Summons'] = "N/A Gen 0"
-      else:
-        dict_attri['Summons'] = str(dict_attri['Summons Left']) + "/" + str(dict_attri['Max Summons']) 
-      dict_attri['Total Score'] = tot_score + comb_score / 4 
+      tot_score += match[j+12]
+      dict_attri[stat_traits[i] + ' Score'] = round(match[j+12]*100, 2) 
       j += 1
+    if dict_attri['Summons Left'] < 0:
+      dict_attri['Summons'] = "N/A Gen 0"
+    else:
+      dict_attri['Summons'] = str(dict_attri['Summons Left']) + "/" + str(dict_attri['Max Summons']) 
+    dict_attri['Average Score'] = round((tot_score) * 100, 2 )
+      
     matches.append(dict_attri)
   #print(matches)
   #found_data["data"] = matches
