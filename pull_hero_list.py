@@ -322,7 +322,7 @@ def pull_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, o
       tot_score += match[j+12]
       dict_attri[stat_traits[i] + ' Score'] = round(match[j+12]*100, 2) 
       j += 1
-    if dict_attri['Summons Left'] < 0:
+    if dict_attri['Generation'] == 0:
       dict_attri['Summons'] = "N/A Gen 0"
     else:
       dict_attri['Summons'] = str(dict_attri['Summons Left']) + "/" + str(dict_attri['Max Summons']) 
