@@ -302,10 +302,7 @@ for (i = 0; i < coll.length; i++) {
       data : empty_matches, searching : false, info : false,
       retrive : true,
       'scrollY': '50vh',
-      columnDefs: [
-            { width: '20%', targets: 0 }
-        ],
-      fixedColumns: true,
+      fixedColumns: false,
       responsive : true,
       "aaSorting": [3, "desc"],
       "pageLength" : 50,
@@ -355,7 +352,7 @@ for (i = 0; i < coll.length; i++) {
       } 
       ],
       columnDefs: [
-        { type: 'sethigh', targets : [2, 10, 11]}
+        { type: 'sethigh', targets : [2, 15, 16]}
      ],
     });
 
