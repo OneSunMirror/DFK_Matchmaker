@@ -10,7 +10,9 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='filter_multi_select.css')}}"/>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  
 </head>
 <body style="background-color:rgba(170, 173, 115, 0.199)">
 <h1><img class="scale" src="{{url_for('static', filename='heart.png')}}" /> Defi Kingdoms Matchmaker <img class="scale" src="{{url_for('static', filename='heart.png')}}" /></h1>
@@ -18,7 +20,7 @@
 <p></p>
 <p>Minor update 15 May 22, now users can click on 'Gene Details' column to see the genes without having to match</p>
 <P>Please check out this project's DFK Build grant submission <a href="https://build.defikingdoms.com/t/dfk-matchmaker-dfkmatchmaker-herokuapp-com/162" target="_blank">here</a> </P>
-
+<p>Advanced Search <a href="{{ url_for('adv') }}">Alpha </a></p>
 <p>Tips <a data-toggle="tooltip" title="If this proves to be useful for enough people, tips will go towards upgrade heroku servers and future functionality upgrades">&#x1F6C8;</a> are greatly appreciated @ 0xA5aed0dA6d7Ae07815b044702179192eAe5e3984  <i id='copy_tip' class="fa fa-copy" style="cursor:pointer"></i></p>
 <p><a href="https://twitter.com/DfkMatchmaker?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @DfkMatchmaker</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
 
@@ -45,6 +47,21 @@
 <fieldset id="hero_list" align="left" display:"flex" margin-left:10px float:"left" > 
 </fieldset>
 <p></p><p></p>
+
+<div class="form-group row">
+  <label class="col-2 col-form-label" for="search_fields">Search Options</label>
+  <div class="col-10">
+    <select multiple name="search_fields" id="search_fields" class="filter-multi-select">
+      <option value="PrimaryClass">Primary Class</option>
+      <option value="SecondaryClass">Secondary Class</option>
+      <option value="Profession">Profession</option>
+      <option value="Passive1">Passive 1</option>
+      <option value="Passive2">Passive 2</option>
+      <option value="Active1">Active 1</option>
+      <option value="Active2">Active 2</option>
+    </select>
+  </div>
+</div>
 <div class="sliderWrapper">
 <div>search for same Generation No. only</div>
 <label class="switch">
@@ -65,8 +82,6 @@
 
 </div>
 <p></p>
-
-
 <button type="button" class="collapsible" text-align="cent"><a data-toggle="tooltip" title="Manually enter ID of the second hero rather than searching the Auction House">&#x1F6C8;</a> Manual Match</button>
 <div class="content"><br>
   <p>Instruction: Enter your hero ID (no need to add the 1 + twelve 0s infront for Crystalvale hero, simply use the toggle under the input box)</p>
@@ -188,6 +203,7 @@
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
 <script src="{{url_for('static', filename='novalue.js')}}"></script>
 <script src="{{url_for('static', filename='draw_table.js')}}"></script>
+<script src="{{url_for('static', filename='filter-multi-select-bundle.min.js')}}"></script>
 <script>
   var id_1
   var attris = new Array()

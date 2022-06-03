@@ -1,3 +1,4 @@
+
 .container {
   margin: 50px;
   display: block;
@@ -15,6 +16,10 @@ body {
 	overflow-y: scroll;
 	padding: 2ch;
 	text-align: center;
+}
+.dark-mode {
+  background: black;
+  color: white;
 }
 .scale {
   height: 1.5em;
@@ -36,10 +41,14 @@ body {
       box-shadow: none;
       padding: 5px;
     }
+    .dark-mode .input, textarea {
+      background-color: #5c5c5c;
+    }
     * {
       box-sizing: border-box;
       font-family: 'Quantico', sans-serif;
     }
+
     .row {
       display: flex;
       margin-left:-5px;
@@ -50,9 +59,29 @@ body {
       flex: 20%;
       padding: 5px;
     }
+    .column_narrow {
+      float: left;
+      flex: 25%;
+      padding: 5px;
+    }
+    .column_wide {
+      float: left;
+      flex: 65%;
+      padding: 5px;
+    }
+    .column_mid {
+      float: left;
+      flex: 10;
+      padding: 5px;
+    }
     .column_1 {
       float: left;
       flex: 35%;
+      padding: 5px;
+    }
+    .column_0 {
+      float: left;
+      flex: 50%;
       padding: 5px;
     }
     /* Clearfix (clear floats) */
@@ -67,16 +96,20 @@ body {
       width: 100%;
       border: 1px solid #ddd;
     }
+    
     td {
       text-align: left;
       padding: 2px;
     }
     tr:nth-child(even) {
-      background-color: #f2f2f2;
+      text-align: left;
+      padding: 2px;
     }
+
     /* Style the button that is used to open and close the collapsible content */
     th.rotated-text {
         height: 140px;
+      font-size: 14px;
       white-space: nowrap;
       padding: 0 !important;
   }
@@ -109,6 +142,24 @@ body {
 .active, .collapsible:hover {
   background-color: #8FF566
 }
+.dark-mode .active {
+  background-color: #044965
+}
+.dark-mode .collapsible:hover {
+  background-color: #044965
+}
+
+
+.dark-mode .table-striped
+{
+  color : white
+}
+
+.dark-mode .table-striped>tbody>tr:nth-child(odd)
+{
+  color : white
+}
+
 .collapsible:after {
   content: '\02795'; /* Unicode character for "plus" sign (+) */
   font-size: 13px;
@@ -125,11 +176,13 @@ body {
 .content {
   padding: 0 18px;
   max-height: 0;
-  overflow: hidden;
-  background-color: #f1f1f1;
+  overflow: auto;
+
   transition: max-height 0.2s ease-out;
 }
- 
+.dark-mode {
+  background-color: black;
+}
 /* Tooltip container */
 .tooltip {
   position: relative;
@@ -223,6 +276,9 @@ input[type='radio']:checked {
 input:checked + [class*="slider-"] {
   background-color: #8FF566;
 }
+.dark-mode input:checked + [class*="slider-"] {
+  background-color: #044965;
+}
 
 input:focus + [class*="slider-"] {
   box-shadow: 0 0 1px #8FF566;
@@ -281,4 +337,26 @@ tr.shown td.details-control {
 text-align:center; 
 color:red;
 }
+
+/* Check out later: https://bbbootstrap.com/snippets/accordion-hover-effect-26103860 */
+
+.mt-100 {
+  margin-top: 50px;
+}
+
+h2 {
+color: darkgreen;
+}
+
+#css-dropdown
+{
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  width: 300px;
+  height: 42px;
+  margin: 100px auto 0 auto;
+}
+
 

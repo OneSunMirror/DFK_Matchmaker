@@ -12,16 +12,21 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body style="background-color:rgba(170, 173, 115, 0.199)">
+<body>
 <h1><img class="scale" src="{{url_for('static', filename='heart.png')}}" /> Defi Kingdoms Matchmaker <img class="scale" src="{{url_for('static', filename='heart.png')}}" /></h1>
 <p>Third Party App, not affliated with DFK Kingdoms, likelihood and scoring are a guide only based on public avaliable information and not calculated by Harmony heroes smartcontract</p>
 <p></p>
-<p> Update 23 May 22, More accurate Scoring Algorithm implemented, the score is now the likelihood of mutation occuring (see <a href="https://medium.com/@OSM_DFK/dfk-matchmaker-mutation-searching-scoring-algorithm-explained-19bd8a703604"  target="_blank">Medium Article</a>)</p>
-<p> -wallet hero data is currently unavaliable, working on fix (update, its fixed now)</p>
-<P><font color='red'>Please check out this project's DFK Build grant submission for this project's roadmap, any comments and likes would be greatly appreciated </font><a href="https://build.defikingdoms.com/t/dfk-matchmaker-re-submission/309" target="_blank">here</a> </P>
-
-<p>Tips <a data-toggle="tooltip" title="If this proves to be useful for enough people, tips will go towards upgrade heroku servers and future functionality upgrades">&#x1F6C8;</a> are greatly appreciated @ 0xA5aed0dA6d7Ae07815b044702179192eAe5e3984  <i id='copy_tip' class="fa fa-copy" style="cursor:pointer"></i></p>
-<p><a href="https://twitter.com/DfkMatchmaker?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @DfkMatchmaker</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+<p> Update 03 June 22, now with dark mode (still need fine tuning, progressive update in coming days)</p>
+<P><font color='red'>Please check out this project's DFK Build grant submission for this project's roadmap, any comments and likes would be greatly appreciated</font><a href="https://build.defikingdoms.com/t/dfk-matchmaker-re-submission/309" target="_blank">here</a> </P>
+<p>Tips <a data-toggle="tooltip" title="If this proves to be useful for enough people, tips will go towards upgrade heroku servers and future functionality upgrades">&#x1F6C8;</a> are greatly appreciated @ 0xA5aed0dA6d7Ae07815b044702179192eAe5e3984<i id='copy_tip' class="fa fa-copy" style="cursor:pointer"></i>&nbsp&nbsp&nbsp&nbsp<a href="https://twitter.com/DfkMatchmaker?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @DfkMatchmaker</a>   <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+    <div class="sliderWrapper">
+      <div>Dark Mode</div>
+      <label class="switch">
+        <input id="toggle_darkmode" type="checkbox" unchecked>
+        <span class="slider-p">
+        </span> 
+      </label>
+    </div>
 
 <button type="button" class="collapsible" text-align="cent"><a data-toggle="tooltip" title="Search against Auction Houses">&#x1F6C8;</a> Search Auction House(s)</button>
 <div class="content"><br>
@@ -63,7 +68,6 @@
     </span> 
   </label>
   </div>
-
 </div>
 <p></p>
 
@@ -265,6 +269,12 @@ function toggleCollapse(coll, i) {
       } else {
       }
     }
+}
+document.getElementById("toggle_darkmode").addEventListener("change", set_darkmode);
+function set_darkmode (){
+  document.body.classList.toggle("dark-mode");
+  document.querySelector(":root").classList.toggle("light");
+  
 }
 
 for (i = 0; i < coll.length; i++) {

@@ -258,8 +258,83 @@ def update_pg_auction(DATABASE_URL, GRAPHQL, TYPE):
   conn.close()
   return None
 
+def pull_pg_auction_adv(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, options):
+  generation = hero_details['generation']
+  maxsummons = hero_details['maxsummons']
+  summonsleft = maxsummons - hero_details['summons']
+  #print(DATABASE_URL)
+  conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+  #conn = psycopg2.connect(
+  #      host="localhost",
+  #      database="Heroes_all",
+  #      user="postgres",
+  #      password="asdqwe123")
+  cur = conn.cursor()
+  search_space_txt = ''
+  for i in search_space:
+    search_space_txt += ', ('
+    for j in range(0,len(hero_gene[i])):
+        if hero_gene[i][j] > 0.0:
+          search_space_txt += '+ gene[%s][%s] * %s * %s' % (i+1, complement_gene[j]+1, hero_gene[i][j], upgrade_chances(j))
+    search_space_txt += ')'
+  sql_str = 'SELECT id, mainclass, subclass, rarity, generation, maxsummons, summonsleft, level, price, summoned_from, auction_in, gene_string' + search_space_txt + ' FROM Heroes Where ('
+  #print(sql_str)
+  SQL = cur.mogrify(sql_str)
+  for i in search_space:
+    #print(hero_gene[i])
+    for j in range(0,len(hero_gene[i])):
+        if hero_gene[i][j] >= 0.75:
+          SQL = SQL + cur.mogrify('gene[%s][%s] >= 0.75', (i+1, complement_gene[j]+1)) + b' OR '
+  SQL = SQL[:len(SQL)-3]
+  opt = cur.mogrify(") ")
+  if options['bool_gen']:
+    opt = opt + cur.mogrify('AND generation = %s ', (str(generation)))
+  if options['bool_summons']:
+    if generation > 0:
+      opt = opt + cur.mogrify('AND maxsummons >= %s AND summonsleft >= %s' , (maxsummons, summonsleft))
+  #SQL = SQL + cur.mogrify(') AND generation = %s AND maxsummons >= %s AND summonsleft >= %s', (generation, maxsummons, summonsleft ))
+  #print(opt)
+  SQL = SQL + opt
+  cur.execute(SQL)
+  data = cur.fetchall()
+  #print(data)
+  #print(data[1])
+  conn.commit()
+  SQL = """SELECT mainClass FROM Heroes Where id=-1"""
+  cur.execute(SQL)
+  last_update = cur.fetchall()
+  conn.close()
+  if TYPE == 'Sale':
+    O_TYPE = 'Rent'
+  else:
+    O_TYPE = 'Sale'
+  matches = []
+  #print(len(data))
+  for match in data:
+    #match_data = get_other_hero_data(get_contract(match[0], rpc_add))
+    attributes= ['ID', 'Class', 'Sub Class', 'Rarity', 'Generation', 'Max Summons', 'Summons Left', 'level', TYPE, 'summoned_from', 'auction_in', 'gene_string']
+    dict_attri = {attributes[i]: match[i] for i in range(0, 12)}
+    dict_attri[O_TYPE] = 'N/A'
+    tot_score = 0
+    j = 0
+    for i in search_space:
+      tot_score += match[j+12]
+      dict_attri[stat_traits[i] + ' Score'] = round(match[j+12]*100, 2) 
+      j += 1
+    if dict_attri['Generation'] == 0:
+      dict_attri['Summons'] = "N/A Gen 0"
+    else:
+      dict_attri['Summons'] = str(dict_attri['Summons Left']) + "/" + str(dict_attri['Max Summons']) 
+    dict_attri['Average Score'] = round((tot_score) * 100, 2 )
+      
+    matches.append(dict_attri)
+  #print(matches)
+  #found_data["data"] = matches
+  current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+  return matches, last_update, current_time
 
-def pull_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, options):
+
+def get_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, options):
   generation = hero_details['generation']
   maxsummons = hero_details['maxsummons']
   summonsleft = maxsummons - hero_details['summons']
