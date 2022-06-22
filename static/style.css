@@ -1,4 +1,5 @@
-
+.select_container 
+{ margin: 20px auto; max-width: 80%;  }
 .container {
   margin: 50px;
   display: block;
@@ -10,12 +11,16 @@
 html {	
 	font-size: 16px;
 }
+p {
+  text-align: center;
+}
+
 body {
-	background: slategray;
+	background: white;
 	margin: 0;
 	overflow-y: scroll;
 	padding: 2ch;
-	text-align: center;
+  text-align: center;
 }
 .dark-mode {
   background: black;
@@ -45,48 +50,79 @@ body {
       background-color: #5c5c5c;
       color: white;
     }
+    .textarea {
+      border: 2px solid rgba(0, 0, 0, 0.6);
+      background-image:none;
+      background-color: #dadad3;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      box-shadow: none;
+      padding: 5px;
+    }
+    .dark-mode textarea {
+      background-color: #5c5c5c;
+      color: white;
+    }
     * {
       box-sizing: border-box;
       font-family: 'Quantico', sans-serif;
     }
 
     .row {
+      text-align: center;
       display: flex;
       margin-left:-5px;
       margin-right:-5px;
     }    
     .column_2 {
+      text-align: center;
       float: left;
       flex: 20%;
       padding: 5px;
     }
+    .column_4 {
+      border: 1px solid black;
+      text-align: center;
+      float: left;
+      flex: 25%;
+      padding: 5px;
+    }
+    .dark-mode .column_4{
+      border: 1px solid white;
+    }
     .column_narrow {
+      text-align: center;
       float: left;
       flex: 25%;
       padding: 5px;
     }
     .column_wide {
+      text-align: center;
       float: left;
       flex: 65%;
       padding: 5px;
     }
     .column_mid {
+      text-align: center;
       float: left;
       flex: 10;
       padding: 5px;
     }
     .column_1 {
+      text-align: center;
       float: left;
       flex: 35%;
       padding: 5px;
     }
     .column_0 {
+      text-align: left;
       float: left;
       flex: 50%;
       padding: 5px;
     }
     /* Clearfix (clear floats) */
     .row::after {
+      text-align: center;
       content: "";
       clear: both;
       display: table;
@@ -137,6 +173,7 @@ body {
   text-align: center;
   outline: none;
   font-size: 20px;
+  text-align: center;
 }
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
@@ -251,7 +288,8 @@ input[type='radio']:checked {
   background-color: #ccc;  
   -webkit-transition: .4s;
   transition: .4s;
-
+  text-align: center;
+  overflow: auto;
 }
 .slider-p {
   background-color: #ccc;  
@@ -272,6 +310,8 @@ input[type='radio']:checked {
   background-color: white;
   -webkit-transition: .4s;
   transition: .4s;
+  text-align: center;
+  overflow: auto;
 }
 
 .dark-mode [class*="slider-"]:before {
@@ -352,7 +392,10 @@ color:red;
 }
 
 h2 {
-color: darkgreen;
+color: black;
+}
+.dark-mode h2{
+color: white;  
 }
 
 #css-dropdown
@@ -365,5 +408,3 @@ color: darkgreen;
   height: 42px;
   margin: 100px auto 0 auto;
 }
-
-

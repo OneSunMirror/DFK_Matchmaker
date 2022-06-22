@@ -302,7 +302,7 @@ def get_gene_prob_graphql(id):
     r = requests.post(graphql, json={'query': HERO_QUERY % (id)}).json()['data']['hero']
     #print(r)
     if (r is None):
-        return None, None
+        return None, None, None
     return calc_prob(int(r['statGenes']))
 
 HERO_QUERY = """
@@ -375,6 +375,7 @@ def calc_rarity(r1, r2):
         }
         prob.append(dict)
     return prob
+
 def calc_prob(raw_genes):
     p_genes = np.zeros([11,32])
     swap_p = [0.75, 0.1875, 0.046875, 0.015625]
@@ -382,16 +383,21 @@ def calc_prob(raw_genes):
     #print(genes)
     dict_gene_all = []
     dict_gene = {}
+    c = len(scope_of_genes)
+    filter_string_l = ['0'] * (33 * 4 * c)
     for i in range(11):
         for j in range(4):
             dict_gene['type'] = stat_traits[i]
             if i in scope_of_genes:
                 dict_gene[_gene_types[j]] = gene_encoding[i][genes[j][i]]
+                filter_string_l[((j*c*33) +(i*33) + genes[j][i])] = '1'
             p_genes[i][genes[j][i]] += swap_p[j]
         if i in scope_of_genes:
             dict_gene_all.append(dict_gene)
             dict_gene = {}
-    return p_genes, dict_gene_all            
+    filter_string = int(''.join(map(str,filter_string_l)),2)
+    #print(filter_string)
+    return p_genes, dict_gene_all, filter_string            
     
 #print(get_gene_prob(contract))
 

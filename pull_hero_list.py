@@ -202,7 +202,7 @@ def pull_auction_str(cur, GRAPHQL, TYPE):
             summoned_from = "SD"
         #print(auction['tokenId'])
           gene_string = auction['tokenId']['statGenes']
-          gene_prob, g_s = calc_prob(convert_int(gene_string))
+          gene_prob, g_s, filter_string = calc_prob(convert_int(gene_string))
           generation = convert_int(auction['tokenId']['generation'])
           c_rarity = rarity[int(auction['tokenId']['rarity'])]
           mainClass = auction['tokenId']['mainClass']
@@ -211,12 +211,12 @@ def pull_auction_str(cur, GRAPHQL, TYPE):
           price = float(auction['startingPrice']) / 1000000000000000000
           price = int(price)
           #match_data = get_other_hero_data(get_contract(int(hero_id), rpc_add))
-          auction_dict[hero_id] = [hero_id,  max_Summons, summons_left, generation, price, gene_prob.tolist(), mainClass, subClass, level, c_rarity, summoned_from, auction_in, json.dumps(g_s)]
+          auction_dict[hero_id] = [hero_id,  max_Summons, summons_left, generation, price, gene_prob.tolist(), mainClass, subClass, level, c_rarity, summoned_from, auction_in, json.dumps(g_s), str(filter_string)]
   #print("Total Auctions " + len(auction_dict))
-  auct_str = b', ' .join(cur.mogrify("(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", x) for x in auction_dict.values()) 
+  auct_str = b', ' .join(cur.mogrify("(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", x) for x in auction_dict.values()) 
   #print(auct_str)
   #print(cur.mogrify("(-1, null, null, null, null, null, " + datetime.now().strftime("%d/%m/%Y %H:%M:%S")))
-  auct_str = auct_str + cur.mogrify(", ('-1', null, null, null, null, null, '" + datetime.now().strftime("%d/%m/%Y %H:%M:%S") + "', null, null, null, null, null, null)")
+  auct_str = auct_str + cur.mogrify(", ('-1', null, null, null, null, null, '" + datetime.now().strftime("%d/%m/%Y %H:%M:%S") + "', null, null, null, null, null, null, null)")
   return auct_str
 
 #DATABASE_URL = os.environ['DATABASE_URL']
@@ -247,7 +247,7 @@ def update_pg_auction(DATABASE_URL, GRAPHQL, TYPE):
   cur.execute(SQL)
   conn.commit()
   #print(len(auction_str))
-  SQL = cur.mogrify('INSERT INTO heroes (id,  maxsummons, summonsleft, generation, price, gene, mainclass, subclass, level, rarity, summoned_from, auction_in, gene_string) VALUES ')  
+  SQL = cur.mogrify('INSERT INTO heroes (id,  maxsummons, summonsleft, generation, price, gene, mainclass, subclass, level, rarity, summoned_from, auction_in, gene_string, filter_string) VALUES ')  
   SQL = SQL + auction_str
   #print(SQL)
   #SQL = cur.mogrify('Select * From heroes')
@@ -258,7 +258,7 @@ def update_pg_auction(DATABASE_URL, GRAPHQL, TYPE):
   conn.close()
   return None
 
-def pull_pg_auction_adv(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, options):
+def pull_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, options):
   generation = hero_details['generation']
   maxsummons = hero_details['maxsummons']
   summonsleft = maxsummons - hero_details['summons']
@@ -409,14 +409,96 @@ def get_pg_auction(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, op
   current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
   return matches, last_update, current_time
 
+def get_pg_auction_adv(hero_gene, DATABASE_URL, TYPE, search_space, hero_details, options):
+  generation = hero_details['generation']
+  maxsummons = hero_details['maxsummons']
+  summonsleft = maxsummons - hero_details['summons']
+  #print(DATABASE_URL)
+  conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+  #conn = psycopg2.connect(
+  #      host="localhost",
+  #      database="Heroes_all",
+  #      user="postgres",
+  #      password="asdqwe123")
+  cur = conn.cursor()
+  search_space_txt = ''
+  for i in search_space:
+    search_space_txt += ', ('
+    for j in range(0,len(hero_gene[i])):
+        if hero_gene[i][j] > 0.0:
+          search_space_txt += '+ gene[%s][%s] * %s * %s' % (i+1, complement_gene[j]+1, hero_gene[i][j], upgrade_chances(j))
+    search_space_txt += ')'
+  sql_str = 'SELECT id, mainclass, subclass, rarity, generation, maxsummons, summonsleft, level, price, summoned_from, auction_in, gene_string, filter_string' + search_space_txt + ' FROM Heroes Where ('
+  #print(sql_str)
+  SQL = cur.mogrify(sql_str)
+  for i in search_space:
+    #print(hero_gene[i])
+    for j in range(0,len(hero_gene[i])):
+        if hero_gene[i][j] >= 0.75:
+          SQL = SQL + cur.mogrify('gene[%s][%s] >= 0.75', (i+1, complement_gene[j]+1)) + b' OR '
+  SQL = SQL[:len(SQL)-3]
+  opt = cur.mogrify(") ")
+  if options['bool_gen']:
+    opt = opt + cur.mogrify('AND generation = %s ', (str(generation)))
+  else:
+    opt = opt + cur.mogrify('AND generation BETWEEN %s AND %s ', (str(options['gen_range'][0]),str(options['gen_range'][1])))
+
+  if options['bool_summons']:
+    if generation > 0:
+      opt = opt + cur.mogrify('AND maxsummons >= %s AND summonsleft >= %s' , (maxsummons, summonsleft))
+  else:
+    opt = opt + cur.mogrify('AND summonsleft BETWEEN %s AND %s ', (str(options['summon_range'][0]),str(options['summon_range'][1])))
+  #SQL = SQL + cur.mogrify(') AND generation = %s AND maxsummons >= %s AND summonsleft >= %s', (generation, maxsummons, summonsleft ))
+  #print(opt)
+  SQL = SQL + opt
+  cur.execute(SQL)
+  data = cur.fetchall()
+  #print(data)
+  #print(data[1])
+  conn.commit()
+  SQL = """SELECT mainClass FROM Heroes Where id=-1"""
+  print("querying DB...")
+  cur.execute(SQL)
+  print("results returned")
+  last_update = cur.fetchall()
+  conn.close()
+  if TYPE == 'Sale':
+    O_TYPE = 'Rent'
+  else:
+    O_TYPE = 'Sale'
+  matches = []
+  #print(len(data))
+  for match in data:
+    #match_data = get_other_hero_data(get_contract(match[0], rpc_add))
+    attributes= ['ID', 'Class', 'Sub Class', 'Rarity', 'Generation', 'Max Summons', 'Summons Left', 'level', TYPE, 'summoned_from', 'auction_in', 'gene_string', 'filter_string']
+    dict_attri = {attributes[i]: match[i] for i in range(0, 13)}
+    dict_attri[O_TYPE] = 'N/A'
+    tot_score = 0
+    j = 0
+    for i in search_space:
+      tot_score += match[j+13]
+      dict_attri[stat_traits[i] + ' Score'] = round(match[j+13]*100, 2) 
+      j += 1
+    if dict_attri['Generation'] == 0:
+      dict_attri['Summons'] = "N/A Gen 0"
+    else:
+      dict_attri['Summons'] = str(dict_attri['Summons Left']) + "/" + str(dict_attri['Max Summons']) 
+    dict_attri['Average Score'] = round((tot_score) * 100, 2 )
+      
+    matches.append(dict_attri)
+  #print(matches)
+  #found_data["data"] = matches
+  current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+  return matches, last_update, current_time, len(data)
+
 
 
 temp_add = "0xA5aed0dA6d7Ae07815b044702179192eAe5e3984"
-#print(get_users_heroes(temp_add, rpc_add))
+print(get_users_heroes(temp_add, rpc_add))
 #update_pg_auction('postgres://vefofuiocxcndo:45f6fc2db6c7858a26c57daf1a3667cf33c98fbd4f4e95c74a41560fc98ace42@ec2-34-199-200-115.compute-1.amazonaws.com:5432/d8r59mr19penn2'
 #, AUCTIONS_OPEN_GRAPHQL_QUERY_FAST, 'saleAuctions')
 #update_pg_auction('postgres://jhbxotgrodncau:19489d0f1099927d1ee179fd23b56c8ebf43dfc133e7729479d5ef8051bfb60a@ec2-18-215-96-22.compute-1.amazonaws.com:5432/deknqa8o27d58f'
-#, AUCTIONS_OPEN_GRAPHQL_QUERY_FAST_rent, 'assistingAuctions')
+# , AUCTIONS_OPEN_GRAPHQL_QUERY_FAST_rent, 'assistingAuctions')
 
 #  SQL = cur.mogrify('SELECT * FROM Heroes Where gene[1][1] >= 0.75')
 #  cur.execute(SQL)

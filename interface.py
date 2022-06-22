@@ -22,6 +22,38 @@ def init():
 def adv():
     return render_template('adv.html')
 
+@app.route('/api/update_adv', methods=['POST'])
+def update_adv():
+    hero_ID_1 = int(json.loads(request.get_data())['id_1'])
+    options = json.loads(json.loads(request.get_data())['options'])
+    print(options)
+    if options['bool_zone'] == False:
+        hero_ID_1 = hero_ID_1 +  1000000000000
+    #hero_1_contract = get_contract(hero_ID_1, rpc_add)
+    #gene_prob_1, gene_details_1 = get_gene_prob(hero_1_contract)
+    gene_prob_1, gene_details_1, __ = get_gene_prob_graphql(hero_ID_1)
+    if (gene_prob_1 is None):
+        print("Not valid hero")
+        return json.dumps({'hero_found' : False, "id" : hero_ID_1})
+    #hero_1_details, desc = get_other_hero_data(hero_1_contract)
+    hero_1_details, desc = get_other_hero_data_graphql(hero_ID_1)
+    DATABASE_URL = os.environ['DATABASE_URL']
+    sale_match, last_update, current_time, sale_count = get_pg_auction_adv(gene_prob_1, DATABASE_URL, "Sale", [0,1,3,4,5,6], hero_1_details, options)
+    DATABASE_URL = os.environ['HEROKU_POSTGRESQL_YELLOW_URL']
+    rent_match, last_update, current_time, rent_count = get_pg_auction_adv(gene_prob_1, DATABASE_URL, "Rent", [0,1,3,4,5,6], hero_1_details, options)
+    res = {}
+    res['hero_found'] = True
+    res['hero1'] = gene_details_1
+    res['matches'] = sale_match +  rent_match
+    res['last_update'] = last_update
+    res['current_time'] = current_time
+    res['sale_count'] = sale_count
+    res['rent_count'] = rent_count
+    #print(sale_match)
+    print("Finding Match for " + str(hero_ID_1))
+    return json.dumps(res)
+
+
 @app.route('/api/update', methods=['POST'])
 def update():
     hero_ID_1 = int(json.loads(request.get_data())['id_1'])
@@ -30,7 +62,7 @@ def update():
         hero_ID_1 = hero_ID_1 +  1000000000000
     #hero_1_contract = get_contract(hero_ID_1, rpc_add)
     #gene_prob_1, gene_details_1 = get_gene_prob(hero_1_contract)
-    gene_prob_1, gene_details_1 = get_gene_prob_graphql(hero_ID_1)
+    gene_prob_1, gene_details_1, __ = get_gene_prob_graphql(hero_ID_1)
     if (gene_prob_1 is None):
         print("Not valid hero")
         return json.dumps({'hero_found' : False, "id" : hero_ID_1})
@@ -73,8 +105,8 @@ def data():
     #hero_2_contract = get_contract(id2, rpc_add)
     #print(hero_2_contract)
     #gene_prob_2, gene_details_2 = get_gene_prob(hero_2_contract)
-    gene_prob_2, gene_details_2 = get_gene_prob_graphql(id2)
-    gene_prob_1, gene_details_1 = get_gene_prob_graphql(id1)
+    gene_prob_2, gene_details_2, __ = get_gene_prob_graphql(id2)
+    gene_prob_1, gene_details_1, __ = get_gene_prob_graphql(id1)
     if (gene_prob_2 is None):
         return json.dumps({'valid' : False, "valid_txt" : "invalid Hero ID: " + str(id2)})
     if (gene_prob_1 is None):

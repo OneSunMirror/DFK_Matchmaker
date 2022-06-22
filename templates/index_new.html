@@ -12,19 +12,26 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Quantico&display=swap" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}")>
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.6.0/lumen/bootstrap.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css">
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css"/>  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
+  <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='add_style.css')}}">
+  <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='ion.rangeSlider.css')}}">
+  <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
+  <script src="{{url_for('static', filename='ion.rangeSlider.js')}}"></script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 <h1><img class="scale" src="{{url_for('static', filename='heart.png')}}" /> Defi Kingdoms Matchmaker <img class="scale" src="{{url_for('static', filename='heart.png')}}" /></h1>
 <p>Third Party App, not affliated with DFK Kingdoms, likelihood and scoring are a guide only based on public avaliable information and not calculated by Harmony heroes smartcontract</p>
 <p></p>
-<p> Update 03 June 22, now with dark mode (still need fine tuning, progressive update in coming days)</p>
+<p> Update 22 June 22, Major update - Filtering mode. Now you can filter by Dominate and Reccessive Genes in search results. In addition, custom filtering code can be generated for future searchs</p>
 <P><font color='red'>Please check out this project's DFK Build grant submission for this project's roadmap, any comments and likes would be greatly appreciated</font><a href="https://build.defikingdoms.com/t/dfk-matchmaker-re-submission/309" target="_blank">here</a> </P>
 <p>Tips <a data-toggle="tooltip" title="If this proves to be useful for enough people, tips will go towards upgrade heroku servers and future functionality upgrades">&#x1F6C8;</a> are greatly appreciated @ 0xA5aed0dA6d7Ae07815b044702179192eAe5e3984<i id='copy_tip' class="fa fa-copy" style="cursor:pointer"></i>&nbsp&nbsp&nbsp&nbsp<a href="https://twitter.com/DfkMatchmaker?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @DfkMatchmaker</a>   <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
     <div class="sliderWrapper">
@@ -58,7 +65,9 @@
 <input type="text" size="50" id="contract_add" name="contract_add" value="">
 <fieldset id="hero_list" align="left" display:"flex" margin-left:10px float:"left" > 
 </fieldset>
+
 <p></p><p></p>
+
 <div class="sliderWrapper">
 <div>search for same Generation No. only</div>
 <label class="switch">
@@ -78,8 +87,76 @@
   </div>
 </div>
 <p></p>
+</div>
+<button style="color:red" type="button" class="collapsible" text-align="cent"><a data-toggle="tooltip" title="(new) Advanced Search against Auction Houses">&#x1F6C8;</a>(new) Advanced Search against Auction Houses</button>
+<div class="content"><br>
+  <p>Instruction: Enter your hero ID (no need to add the 1 + twelve 0s infront for Crystalvale hero, simply use the toggle next to the input box)</p>
+  
+  <label class="input_label" for="hero_ID_1"><a data-toggle="tooltip" title="Enter hero ID you wish to find matches for">&#x1F6C8;</a> Hero ID #1:<img class="scale2" src="{{url_for('static', filename='heart_left.png')}}" /></label>
+<input type="text" id="hero_ID_1_adv" name="hero_ID_1" value="">
+<input id="matches_adv" value="Find Matches" type="button" class="pixel"/>
+
+<div class="sliderWrapper">
+<div><img src={{url_for('static', filename='crystal.png')}} wide='20' height='20'/> Hero </div>   
+<label class="switch">
+    <input id="bool_zone_adv" type="checkbox" checked>
+    <span class="slider-zone">
+    </span> 
+</label>
+<div><img src={{url_for('static', filename='jewel.png')}} wide='20' height='20'/> Hero</div>
+</div>
+<p></p><h2>Filter Options</h2>
+<p></p>
+<p><a data-toggle="tooltip" title="Enter a presaved filter code">&#x1F6C8;</a>Filter Code - Save this code for later use, simply paste and click on validate</p>
+<textarea cols="50" rows="6" id="filter_code" name="filter_code" value=""></textarea>
+<input id="validate_filter_code" value="Validate Filter Code" type="button" class="pixel" onclick="validate_filter_code()"/>
+<p></p>
+<div class="row">
+<div class="column_0" id = "opt_div1">
+  
+<div class="sliderWrapper">
+  <div>Match Generation</div>
+  <label class="switch">
+    <input id="bool_gen_adv" type="checkbox" unchecked onclick="toggle_slider('gen_slider_wrapper')">
+    <span class="slider-p">
+    </span> 
+  </label>
+  </div>
+  <div id="gen_slider_wrapper"><input type="text" class="js-range-slider" id="gen_slider" value="" /></div>
+</div>
+<div class="column_0" id = "opt_div2">
+  <div class="sliderWrapper">
+    <div>Match Summons Remaining</div>
+    <label class="switch">
+      <input id="bool_summons_adv" type="checkbox" unchecked onclick="toggle_slider('summon_slider_wrapper')">
+      <span class="slider-p">
+      </span> 
+    </label>
+    </div>
+    <div id="summon_slider_wrapper"><input type="text" class="js-range-slider" id="summon_slider" value="" /></div>
+</div>
+</div>
+<div class="row">
+  <div class="column_4" id = "opt_D">
+  <h2>D</h2>
+  </div>
+  <div class="column_4" id = "opt_R1">
+    <h2>R1</h2>
+  </div>
+  <div class="column_4" id = "opt_R2">
+    <h2>R2</h2>
+  </div>
+  <div class="column_4" id = "opt_R3">
+    <h2>R3</h2>
+  </div>
+</div>
 
 
+<p></p><p></p>
+
+</div>
+<p></p>
+</div>
 <button type="button" class="collapsible" text-align="cent"><a data-toggle="tooltip" title="Manually enter ID of the second hero rather than searching the Auction House">&#x1F6C8;</a> Manual Match</button>
 <div class="content"><br>
   <p>Instruction: Enter your hero ID (no need to add the 1 + twelve 0s infront for Crystalvale hero, simply use the toggle under the input box)</p>
@@ -200,11 +277,10 @@
 <p>Thanks to <a href="https://github.com/0rtis/dfk/tree/master/hero" target="_blank">0tis</a> for Hero and Auction House API code  </p>
 <p>Thanks to Mr Zipper for <a href="https://medium.com/@MrZipper7/deep-dive-hero-genetics-975902dfbf80" target="_blank">Class</a> and <a href="https://medium.com/@MrZipper7/deep-dive-active-passive-genes-68315567361c" target="_blank" rel="noopener noreferrer">Skills/Combat </a>Summoning Algorithms  </p>
 
-<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
 <script src="{{url_for('static', filename='novalue.js')}}"></script>
+<script src="{{url_for('static', filename='setup_filter.js')}}"></script>
 <script src="{{url_for('static', filename='draw_table.js')}}"></script>
+
 <script>
   var id_1
   var attris = new Array()
@@ -218,10 +294,28 @@
   attris[7] = "StatBoost1"
   attris[8] = "StatBoost2"
   attris[9] = "Rarity"
-
 var coll = document.getElementsByClassName("collapsible");
 var i;
 var global_from_wallet = false
+
+function populate_matches_adv(id_1, matches, f_codes) {
+  f_bin_code = ~BigInt('0b' + convertBase(f_codes[1], 62, 2))
+  temp = BigInt('0b' +convertBase(matches.matches[0].filter_string, 10, 2))
+  filtered_matches = matches.matches.filter(function (el) { return (f_bin_code & BigInt(el.filter_string)) == 0n})
+
+  table_data = $('#data').DataTable().clear().rows.add(filtered_matches).draw();
+  
+  $('#hero1_data').DataTable().clear().rows.add(matches.hero1).draw();
+  document.getElementById("hero1_text").innerHTML = "Hero Data for: " + id_1
+  
+  $('#hero2_data').DataTable().clear().draw();
+  document.getElementById("time").innerHTML = "Auction House data last update: " + matches.last_update + " current time: " + matches.current_time;
+  toggleCollapse(coll[3], 1)
+  toggleCollapse(coll[4], 2)
+  toggleCollapse(coll[5], 1)
+}
+
+
 
 function populate_matches(id_1, matches) {
   $('#hero1_data').DataTable().clear().rows.add(matches.hero1).draw();
@@ -229,14 +323,24 @@ function populate_matches(id_1, matches) {
   document.getElementById("hero1_text").innerHTML = "Hero Data for: " + id_1
   $('#hero2_data').DataTable().clear().draw();
   document.getElementById("time").innerHTML = "Auction House data last update: " + matches.last_update + " current time: " + matches.current_time;
-  toggleCollapse(coll[2], 1)
-  toggleCollapse(coll[3], 2)
-  toggleCollapse(coll[4], 1)
+  toggleCollapse(coll[3], 1)
+  toggleCollapse(coll[4], 2)
+  toggleCollapse(coll[5], 1)
 }
 function scrollto(element) {
   $([document.documentElement, document.body]).animate({
         scrollTop: $(element).offset().top
     }, 200);
+}
+function get_options_adv(){
+  bool_zone = document.getElementById("bool_zone_adv").checked
+  return JSON.stringify({
+    'bool_gen' : document.getElementById("bool_gen_adv").checked,
+    'bool_summons' : document.getElementById("bool_summons_adv").checked,
+    'bool_zone' : bool_zone,
+    'gen_range' : [$("#gen_slider").data().from, $("#gen_slider").data().to] ,
+    'summon_range' : [$("#summon_slider").data().from, $("#summon_slider").data().to]
+  })
 }
 
 function get_options(check_zone){
@@ -294,6 +398,7 @@ for (i = 0; i < coll.length; i++) {
     var empty_matches = null
     toggleCollapse(coll[0], 1)
     tables = document.getElementById("summon_div")
+    
     for (attri in attris) {
        div = document.createElement("div");
        div.className = "column_2" ;
@@ -528,6 +633,32 @@ for (i = 0; i < coll.length; i++) {
     navigator.clipboard.writeText('0xA5aed0dA6d7Ae07815b044702179192eAe5e3984')
   })
 
+  $("#matches_adv").on('click', function() {
+    var matches
+    var gene_response
+    var d_table
+    var f_codes = get_filter_string()
+    id_1 = remove_non_int($('#hero_ID_1_adv').val())
+    $.ajax({
+         'type': 'POST',
+         'async': false,
+         'url': '/api/update_adv',
+         'dataType' : 'json',
+         'data': JSON.stringify({'id_1' : id_1,'options' : get_options_adv()}), 
+         'success': function(res) {
+          if (res.hero_found == true) {
+            scrollto("#match_button")   
+            populate_matches_adv(id_1, res, f_codes)
+          } else{
+            alert("Error: Hero " + res.id + " not found")
+          }   
+          }, 
+         'error': function(error) {  
+
+         }
+    })
+  });
+
   $("#matches").on('click', function() {
     var matches
     var gene_response
@@ -553,7 +684,7 @@ for (i = 0; i < coll.length; i++) {
     })
   });
   $('#data').on( 'length', function ( e, settings, len ) {
-    toggleCollapse(coll[4], 1)
+    toggleCollapse(coll[5], 1)
   } );
   
   $('#data').on('click', 'tr td', function () {
@@ -572,6 +703,7 @@ for (i = 0; i < coll.length; i++) {
             tdi.first().removeClass('fa-plus-square');
             tdi.first().addClass('fa-minus-square');
             row.child(format("subtable-"+row.index())).show();
+            console.log(row_data)
             sub_DataTable("subtable-"+row.index(), row_data.gene_string); 
             // Add to the 'open' array
             if (dataIdx === -1) {
@@ -605,8 +737,8 @@ for (i = 0; i < coll.length; i++) {
             document.getElementById("hero2_text").innerHTML = "Hero Data for: " + row_data.ID
             document.getElementById("hero1_det").innerHTML = "Parent 1: " + response.hero1_t
             document.getElementById("hero2_det").innerHTML = "Parent 2: " + response.hero2_t
-            toggleCollapse(coll[3], 1);
-            toggleCollapse(coll[2], 1)
+            toggleCollapse(coll[4], 1);
+            toggleCollapse(coll[3], 1)
           } else{
             alert(response.valid_txt)
           }

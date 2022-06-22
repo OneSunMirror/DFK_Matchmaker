@@ -1,61 +1,116 @@
-.accordion {
-  background-color: #fefffa;
-  max-width: 600px;
-  margin: 50px auto;
-  border-top: 6px solid #8FF566;
-  line-height: 1.6;
-  -webkit-box-shadow: 5px 5px 10px 0px #a4bac1;
-          box-shadow: 5px 5px 10px 0px #a4bac1;
+@charset "UTF-8";
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
-.accordion__item {
-  border-bottom: 1px solid #dce7eb;
+a {
+  text-decoration: none;
+  color: #379937;
 }
 
-.accordion__title {
-  padding: 15px 15px 15px 40px;
-  display: block;
+.dropdown {
   position: relative;
-  font-weight: 400;
+  font-size: 14px;
+  color: #333;
+  overflow: visible;
+  text-align: left;
+  width: 100%;
+  background: white;
 }
 
-.accordion__title:before {
-  font-family: FontAwesome;
-  content: "\f055";
-  font-size: 20px;
+.dropdown .dropdown-list {
+  padding: 12px;
   position: absolute;
-  left: 15px;
-  top: 12px;
-  color: #8FF566;
+  top: 60px;
+  left: 2px;
+  right: 2px;
+  -webkit-columns: 3;
+          columns: 3;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  background-color: white;
+  -webkit-box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.15);
+  -webkit-transform-origin: 50% 0;
+          transform-origin: 50% 0;
+  -webkit-transform: scale(1, 0);
+          transform: scale(1, 0);
+  -webkit-transition: -webkit-transform .15s ease-in-out .15s;
+  transition: -webkit-transform .15s ease-in-out .15s;
+  transition: transform .15s ease-in-out .15s;
+  transition: transform .15s ease-in-out .15s, -webkit-transform .15s ease-in-out .15s;
+  max-height: 66vh;
+  overflow-y: scroll;
+  overflow: visible;
+  z-index: 1;
+  text-align: left;
 }
 
-.accordion__title h5 {
-  border-bottom: 1px solid #fefffa;
-  display: inline-block;
+.dropdown .dark-mode .dropdown-list {
+  background-color: black;
 }
 
-.accordion__title:hover, .accordion__title:focus {
+.dropdown .dropdown-option {
+  display: block;
+  opacity: 0;
+  -webkit-transition: opacity .15s ease-in-out;
+  transition: opacity .15s ease-in-out;
+  overflow: visible;
+}
+
+.dropdown .dropdown-label {
+  display: block;
+  height: -webkit-max-content;
+  height: -moz-max-content;
+  height: max-content;
+  width: 100%;
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  white-space: pre-wrap;
+  overflow: auto;
   cursor: pointer;
-  outline: none;
 }
 
-.accordion__title:hover h5, .accordion__title:focus h5 {
-  border-bottom-color: #a8bdc4;
-  display: inline-block;
+.dropdown .dropdown-label:before {
+  content: '▼';
+  float: right;
 }
 
-.is-expanded .accordion__title:before {
-  content: "\f056";
+.dropdown.on .dropdown-list {
+  -webkit-transform: scale(1, 1);
+          transform: scale(1, 1);
+  -webkit-transition-delay: 0s;
+          transition-delay: 0s;
+  overflow: visible;
 }
 
-.accordion__content-inner {
-  padding: 0 40px 10px 40px;
+.dropdown.on .dropdown-list .dropdown-option {
+  opacity: 1;
+  -webkit-transition-delay: .2s;
+          transition-delay: .2s;
+  overflow: visible;
 }
 
-.accordion__content {
-  -webkit-transition: height 0.3s ease-out;
-  transition: height 0.3s ease-out;
-  height: 0;
-  overflow: hidden;
+.dropdown.on .dropdown-label:before {
+  content: '▲';
+}
+
+.dropdown [type="checkbox"] {
+  position: relative;
+  top: -1px;
+  margin-right: 4px;
+  color: #379937;
+}
+
+.dark-mode .dropdown {
+  color: white;
+  background-color: #333;
+}
+
+.dark-mode .dropdown-list {
+  color: white;
+  background-color: #333;
 }
 /*# sourceMappingURL=add_style.css.map */
