@@ -1,3 +1,5 @@
+As of 2021, this app is no longer hosted. Please contact davidsiweiwu@gmail.com to request a demo 
+
 # DFK_Matchmaker
 Matchmaker for Summoning Heroes in DFK
 The App takes input hero from user and identify optimal match for summoning with a hero for sale in the auction house. Optimisation score based on maximising high level skills gene
